@@ -15,6 +15,7 @@ use App\Http\Controllers\PagoController;
 use App\Http\Controllers\DoctorHistorialController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\citasController;
+use App\Http\Controllers\panelAdministrativoController;
 use App\Http\Controllers\panelUsuarioController;
 
 // Página principal opcional
@@ -43,3 +44,8 @@ Route::get('/citas',[ citaController::class,'confirmar'])->name("citaseleccionad
 Route::get('/panel',[ panelUsuarioController::class,'index'])->name("iniciusuario");
 Route::get('/panel/mostrar',[ panelUsuarioController::class,'mostrar'])->name("mostrar");
 Route::get('/panel/modificar',[ panelUsuarioController::class,'cambiar'])->name("cambiar");
+Route::get('/dashboard',[ panelAdministrativoController::class,'index'])->name("iniciadministrativo");
+Route::get('/dashboard/disponibilidad',[ panelAdministrativoController::class,'manejarDisponibilidad'])->name("disponibilidad");
+Route::get('/dashboard/agenda',[ panelAdministrativoController::class,'manejarAgenda'])->name("agenda");
+Route::get('/dashboard/blog',[ panelAdministrativoController::class,'manejarBlog'])->name("blog");
+Route::get('/dashboard/doctores',[ panelAdministrativoController::class,'manejarDoctores'])->name("manejodoctores");

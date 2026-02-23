@@ -17,6 +17,17 @@ class CitaController extends Controller
         return view('citas.index', compact('citas'));
     }
 
+    public function pedir(){
+        return view("clinic.seleccionarcita");
+    }
+    public function confirmar(){
+        return view("clinic.citaseleccionada");
+    }
+
+
+
+
+
     public function create()
     {
         return view('citas.create', [

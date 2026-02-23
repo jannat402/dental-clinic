@@ -1,0 +1,52 @@
+main{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    background-image: url("../images/landingpage.png");
+    background-repeat: no-repeat;
+    background-size:cover;
+    opacity: 0.8;
+    width: 100vw;
+    height: 100vh;
+}
+#logo img{
+    height: 80px;
+    width: auto;
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+}
+#centralButton{
+    position: absolute;
+    top:70vh;
+    right: 40vw;
+}
+#centralButton button{
+    width: fit-content;
+    font-size: 3em;
+    background-color: #126b9dFF;
+    border-radius: 20px;
+    padding: 20px 70px 30px 70px;
+    vertical-align:middle;
+    color: white;
+}
+#centralButton button:hover{
+    background-color: rgb(9, 59, 88);
+    border: white solid 2px;
+}
+/*Botones arriba*/
+header ul{
+    margin-right: 10%;
+    width: 90%;
+    gap: 20px;
+    display: flex;
+    justify-content:flex-end;
+}
+header ul li{
+    list-style: none;
+    color: #126b9d;
+    font-weight: 600;
+}
+header ul li:hover {
+    color: white;
+}

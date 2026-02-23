@@ -1,0 +1,37 @@
+
+
+html, body {
+    margin: 0;
+    min-height: 100%;
+    min-width: 100%;
+    padding: 0;
+  }
+  
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    min-height: 100vh;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  .text-node { background-clip: text !important; -webkit-background-clip: text !important; }
+  
+  /* landingpage */
+  .landingpag-d7d85737b5d4 > svg {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    transform: translate(-16px,-16.000000000000057px);
+  }
+  .landingpag-d7d85737b5d4 {
+    position: absolute;
+    left: -18px;
+    top: -98px;
+    width: 1322px;
+    height: 1322px;
+  }

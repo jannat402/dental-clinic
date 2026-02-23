@@ -1,0 +1,65 @@
+main{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: #126b9d;
+    font-size: 20px;
+    font-family: sans-serif;
+}
+main form{
+    margin: 150px 0px auto 0px;
+    width: 100%;
+    display: flex;
+    justify-content:baseline ;
+}
+main form fieldset{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content:baseline ;
+    align-items: baseline;
+    border-width: 0px;
+    margin: 0px;
+}
+main form fieldset input{
+    font-size: large;
+    margin-top: 30px;
+    width: 70%;
+    max-width: 300px;
+    background-color: #8998a5;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 50px;
+    color: #f7f6f5;
+    border-radius: 10px;
+    align-self:center;
+}
+
+main form fieldset input[type="submit"]{
+    background-color: #668fab;
+    color: #f7f6f5;
+    border-radius:20px ;
+    align-self:center;
+}
+
+main form fieldset input{
+    background-color: #b8c9d5;
+
+}
+
+
+::placeholder{
+    color: #f7f6f5;
+    font-weight: 700;
+}
+h1{
+    margin-top: 100px;
+    text-align: center;
+    color: #f7f6f5;
+    font-size: 1.5rem;
+}
+h1 a{
+    color: inherit;
+}

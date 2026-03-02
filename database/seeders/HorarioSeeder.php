@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Horario;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,5 +14,6 @@ class HorarioSeeder extends Seeder
     public function run(): void
     {
         //
+        Horario::factory(50)->create();
     }
 }

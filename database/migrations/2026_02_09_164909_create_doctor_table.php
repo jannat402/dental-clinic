@@ -15,7 +15,9 @@ return new class extends Migration
         Schema::create('doctor', function (Blueprint $table) {
            $table->id('id_doctor'); // PRIMARY KEY AUTO_INCREMENT 
            $table->string('nombre', 50); 
-           $table->string('apellidos', 100); 
+           $table->string('apellidos', 100);
+           $table->string('email', 100)->unique();
+           $table->string('contrasenya');
            $table->string('especialidad', 100)->nullable(); 
            $table->date('fecha_dato')->nullable(); 
            $table->timestamp('fecha_carga')->useCurrent(); 

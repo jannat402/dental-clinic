@@ -18,7 +18,8 @@ return new class extends Migration
             // Foreign key manual hacia doctor 
             $table->unsignedBigInteger('id_doctor'); 
             $table->foreign('id_doctor') ->references('id_doctor') ->on('doctor') ->onDelete('cascade'); 
-            $table->date('fecha'); 
+            $table->date('fecha');
+            $table->unique(['fecha', 'id_doctor']); 
             $table->time('hora_inicio'); 
             $table->time('hora_fin'); 
             $table->boolean('disponible')->default(true); 

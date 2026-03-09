@@ -19,7 +19,8 @@ return new class extends Migration
            $table->string('nombre', 50); 
            $table->string('apellidos', 100); 
            $table->string('telefono', 20)->nullable(); 
-           $table->string('email', 100)->nullable(); 
+           $table->string('email', 100)->nullable();
+           $table->string('contrasenya'); 
            $table->enum('metodo_autenticacion', ['telefono', 'email']); 
            $table->date('fecha_dato')->nullable(); 
            $table->timestamp('fecha_carga')->useCurrent();

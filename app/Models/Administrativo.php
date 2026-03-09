@@ -14,6 +14,7 @@ class Administrativo extends Model
         'nombre',
         'apellidos',
         'email',
+        'contrasenya',
         'autenticacion_segura',
         'rol',
         'fecha_dato',

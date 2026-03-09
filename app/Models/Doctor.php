@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Doctor extends Model
 {
+    use HasFactory;
     protected $table = 'doctor';
     protected $primaryKey = 'id_doctor';
     public $timestamps = false;
@@ -13,6 +15,8 @@ class Doctor extends Model
     protected $fillable = [
         'nombre',
         'apellidos',
+        'email',
+        'contrasenya',
         'especialidad',
         'estado',
         'fecha_dato',

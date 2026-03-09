@@ -64,6 +64,7 @@ class HorarioFactory extends Factory
             'motivo_bloqueo' => $this->faker->optional()->sentence(), 
             'fecha_dato' => $this->faker->optional()->date(), 
             'fecha_carga' => now(), ];
+            //Commit tonto
     }
 
 

@@ -65,7 +65,6 @@ class HorarioFactory extends Factory
             'fecha_dato' => $this->faker->optional()->date(), 
             'fecha_carga' => now(), ];
             //Commit tonto
-            //Commit tonto 2
     }
 
 

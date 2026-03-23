@@ -17,6 +17,7 @@ class Cliente extends Model
         'apellidos',
         'telefono',
         'email',
+        'contrasenya',
         'metodo_autenticacion',
         'fecha_dato',
         'fecha_carga'

@@ -17,6 +17,8 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\citasController;
 use App\Http\Controllers\panelAdministrativoController;
 use App\Http\Controllers\panelUsuarioController;
+use App\Http\Controllers\RegistroController;
+use App\Http\Controllers\LoginController;
 
 // Página principal opcional
 Route::get('/', function () {
@@ -37,6 +39,7 @@ Route::resource('blog', BlogController::class);
 Route::get('/index', function(){
     return view('clinic/landingpage');
 });
+
 Route::get('/inici',[ autenticarseController::class,'index'])->name("paginainici");
 Route::get('/registro',[ autenticarseController::class,'registrar'])->name("registro");
 Route::get('/cita',[ citaController::class,'pedir'])->name("pedircita");
@@ -49,3 +52,13 @@ Route::get('/dashboard/disponibilidad',[ panelAdministrativoController::class,'m
 Route::get('/dashboard/agenda',[ panelAdministrativoController::class,'manejarAgenda'])->name("agenda");
 Route::get('/dashboard/blog',[ panelAdministrativoController::class,'manejarBlog'])->name("blog");
 Route::get('/dashboard/doctores',[ panelAdministrativoController::class,'manejarDoctores'])->name("manejodoctores");
+// LOGIN
+Route::get('/inici', [autenticarseController::class, 'index'])->name('paginainici');
+Route::post('/inici', [autenticarseController::class, 'login'])->name('login.process');
+
+// REGISTRO
+Route::get('/registro', [autenticarseController::class, 'registrar'])->name('registro');
+Route::post('/registro', [autenticarseController::class, 'register'])->name('registro.process');
+
+// LOGOUT
+Route::post('/logout', [autenticarseController::class, 'logout'])->name('logout');

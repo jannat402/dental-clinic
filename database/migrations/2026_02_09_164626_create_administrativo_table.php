@@ -16,11 +16,12 @@ return new class extends Migration
           $table->id('id_admin'); // PRIMARY KEY AUTO_INCREMENT 
           $table->string('nombre', 50); 
           $table->string('apellidos', 100); 
-          $table->string('email', 100)->unique(); 
+          $table->string('email', 100)->unique();
+          $table->string('contrasenya'); 
           $table->enum('autenticacion_segura', ['2FA', 'certificado']); 
           $table->date('fecha_dato')->nullable(); 
           $table->timestamp('fecha_carga')->useCurrent(); 
-          $table->string('rol', 50)->default('administrador');
+          $table->string('rol', 50);
         });
     }
 

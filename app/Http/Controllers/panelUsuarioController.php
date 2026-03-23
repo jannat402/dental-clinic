@@ -17,4 +17,12 @@ class panelUsuarioController extends Controller
     public function cambiar(){
         return view("vistacliente.panelcitas");
     }
+    //Así nadie entra sin login
+    public function __construct()
+    {
+        if (!session()->has('cliente_id')) {
+            return redirect()->route('paginainici')->send();
+        }
+    }
+
 }

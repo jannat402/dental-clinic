@@ -52,20 +52,18 @@ class HorarioFactory extends Factory
             // Doctor que entra tarde 
             $horaInicio = $this->faker->dateTimeBetween("$fecha 10:00", "$fecha 10:00"); 
         }
-        $horaFin = (clone $horaInicio)->modify('+' . rand(5, 8) . ' hours');
+        $horaFin = (clone $horaInicio)->modify('+' . rand(1, 3) . ' hours');
 
-        $disponible = $this->faker->boolean(80); // 80% disponible
-        
         return [ 
             'id_doctor' => $doctor,
             'fecha' => $fecha, 
             'hora_inicio' => $horaInicio, 
             'hora_fin' => $horaFin, 
-            'disponible' => $disponible, 
-            'motivo_bloqueo' => $disponible ? 'disponible para trabajar' : $this->faker->sentence(), 
+            'disponible' => $this->faker->boolean(80), 
+        // 80% disponible 
+            'motivo_bloqueo' => $this->faker->optional()->sentence(), 
             'fecha_dato' => $this->faker->optional()->date(), 
             'fecha_carga' => now(), ];
-            //Commit tonto
     }
 
 

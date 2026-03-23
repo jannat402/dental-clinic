@@ -29,6 +29,7 @@ class HorarioFactory extends Factory
             static::$combinacionesUsadas
         );
         do{
+            //mira si hay un doctory, en caso de no haber registro, crea uno
             $doctor = Doctor::inRandomOrder()->first() ?? Doctor::factory()->create();
             $fecha = $this->faker->dateTimeBetween('now', '+20 days')->format('Y-m-d');
             $combinacion = $doctor->id_doctor . '-' . $fecha;
@@ -55,7 +56,7 @@ class HorarioFactory extends Factory
         $horaFin = (clone $horaInicio)->modify('+' . rand(1, 3) . ' hours');
 
         return [ 
-            'id_doctor' => $doctor,
+            'id_doctor' => $doctor->id,
             'fecha' => $fecha, 
             'hora_inicio' => $horaInicio, 
             'hora_fin' => $horaFin, 

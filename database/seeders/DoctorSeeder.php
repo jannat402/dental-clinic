@@ -77,6 +77,6 @@ class DoctorSeeder extends Seeder
                 ]);
              }
                 */
-             Doctor::factory(2)->create();
+             Doctor::factory(8)->create();
     }
 }

@@ -28,11 +28,13 @@ class HorarioFactory extends Factory
                 ->toArray(),
             static::$combinacionesUsadas
         );
+        $id_doctor=null;
         do{
             //mira si hay un doctory, en caso de no haber registro, crea uno
             $doctor = Doctor::inRandomOrder()->first() ?? Doctor::factory()->create();
             $fecha = $this->faker->dateTimeBetween('now', '+20 days')->format('Y-m-d');
             $combinacion = $doctor->id_doctor . '-' . $fecha;
+            $id_doctor= $doctor->id_doctor;
 
         }while(in_array($combinacion, $combinacionesProhibidas) );
         static::$combinacionesUsadas[] = $combinacion;
@@ -53,16 +55,17 @@ class HorarioFactory extends Factory
             // Doctor que entra tarde 
             $horaInicio = $this->faker->dateTimeBetween("$fecha 10:00", "$fecha 10:00"); 
         }
-        $horaFin = (clone $horaInicio)->modify('+' . rand(1, 3) . ' hours');
+        $horaFin = (clone $horaInicio)->modify('+' . rand(5, 8) . ' hours');
+        $disponible = $this->faker->boolean(80);
 
         return [ 
-            'id_doctor' => $doctor->id,
+            'id_doctor' => $id_doctor,
             'fecha' => $fecha, 
             'hora_inicio' => $horaInicio, 
             'hora_fin' => $horaFin, 
-            'disponible' => $this->faker->boolean(80), 
+            'disponible' => $disponible, 
         // 80% disponible 
-            'motivo_bloqueo' => $this->faker->optional()->sentence(), 
+            'motivo_bloqueo' => $disponible ? 'disponible para trabajar' : $this->faker->sentence(),
             'fecha_dato' => $this->faker->optional()->date(), 
             'fecha_carga' => now(), ];
     }

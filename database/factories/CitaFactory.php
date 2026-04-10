@@ -25,11 +25,11 @@ class CitaFactory extends Factory
         $cliente = Cliente::inRandomOrder()->first();
         $tratamiento = Tratamiento::inRandomOrder()->first();
         do{
-            $fecha = $this->faker->dateTimeBetween('now', '+20 days')->format('Y-m-d');
+            $fecha = $this->faker->dateTimeBetween('now', '+2 days')->format('Y-m-d');
             $horaInicio = $this->faker->dateTimeBetween("$fecha 08:00", "$fecha 22:00");
             $duracion = Tratamiento::where('id_tratamiento', $tratamiento->id_tratamiento)->value('duracion_minutos');
             $horaFin = (clone $horaInicio)->modify('+' . $duracion . ' minutes');
-        }while($this->sePuedeReservar($fecha, $horaInicio,$horaFin));
+        }while(!$this->sePuedeReservar($fecha, $horaInicio,$horaFin,$doctor));
 
 
         return [
@@ -61,26 +61,38 @@ class CitaFactory extends Factory
              */
         ];
     }
-    private function sePuedeReservar($fecha, $horaInicio,$horaFin): bool{
+    private function sePuedeReservar($fecha, $horaInicio,$horaFin,$doctor): bool{
         //Comprobar que no hay otra cita con el mismo doctor, en la misma fecha y la misma hora de inicio y la misma hora final
         //miramos si hay alguna cita el mismo dia, que termine despues del inicio de la cita, y termine antes de acabar la nuestra
+        $hora_inicio_formateada2=$horaInicio->format('H:i:s');
+        $hora_fin_formateada2 = $horaFin->format('H:i:s');
         $hayOtraCita = Cita::where('fecha', $fecha)
-            ->where('hora_inicio', '<', $horaFin->format('H:i:s'))
-            ->where('hora_fin', '>', $horaInicio->format('H:i:s'))
+        
+                ->where('id_doctor', '=', $doctor->id)
+                ->where(function($q) use ($hora_inicio_formateada2) {
+                    $q->where('hora_inicio', '<', $hora_inicio_formateada2)
+                    ->where('hora_fin', '>', $hora_inicio_formateada2);
+                })
+                ->orWhere(function($q) use ($hora_fin_formateada2) {
+                    $q->where('hora_inicio', '<', $hora_fin_formateada2)
+                    ->where('hora_fin', '>', $hora_fin_formateada2);
+                })
             ->exists();
         
         //Comprobar que para la fecha, hora inicio y hora fin, en horario sale como disponible y existe esa fecha
         //Comprobamos primero que haya la fecha
+        /*
         $hayHorario = Horario::where('fecha', $fecha)->exists();
         
         $citaEstaEnHorario = Horario::where('fecha', $fecha)
+            ->where('id_doctor', '=', $doctor->id)
             ->where('hora_inicio', '<=', $horaInicio->format('H:i:s'))
             ->where('hora_fin', '>=', $horaFin->format('H:i:s'))
             ->exists();
         
-        $diaDisponible = Horario::where('fecha', $fecha)->value('disponible');
-        
-        $sePuedeReservar = $hayOtraCita && $hayHorario && $diaDisponible && $citaEstaEnHorario;
+        $diaDisponible = Horario::where('fecha', $fecha)->where('id_doctor',$doctor->id)->value('disponible');
+        */
+        $sePuedeReservar = !$hayOtraCita /*&& $hayHorario && $diaDisponible && $citaEstaEnHorario*/;
         return $sePuedeReservar;
     }
 }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{{asset('css/seleccionarcita.css')}}">
+    <script src="{{asset('js/panelCitas.js')}}"></script>
 </head>
 <body>
     <main>
@@ -23,6 +24,7 @@
                 <input type="submit" value="Pagar">
             </fieldset>
             <fieldset>
+                <div id="mes">{{$mesNombre}}</div>
                 <table>
                     <tr>
                         <th>Lunes</th>

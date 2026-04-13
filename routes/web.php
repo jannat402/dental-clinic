@@ -62,3 +62,8 @@ Route::post('/registro', [autenticarseController::class, 'register'])->name('reg
 
 // LOGOUT
 Route::post('/logout', [autenticarseController::class, 'logout'])->name('logout');
+
+
+//citas
+Route::get('/horarios-disponibles', [CitaController::class, 'horariosDisponibles']);
+

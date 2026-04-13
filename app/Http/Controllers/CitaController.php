@@ -7,6 +7,7 @@ use App\Models\Cliente;
 use App\Models\Doctor;
 use App\Models\Tratamiento;
 use App\Models\Administrativo;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CitaController extends Controller
@@ -18,7 +19,24 @@ class CitaController extends Controller
     }
 
     public function pedir(){
-        return view("clinic.seleccionarcita");
+        $mesNumero = Carbon::now()->month; // 1–12  
+        $mesNombre = '';
+
+        switch ($mesNumero) {
+            case 1:  $mesNombre = 'Enero'; break;
+            case 2:  $mesNombre = 'Febrero'; break;
+            case 3:  $mesNombre = 'Marzo'; break;
+            case 4:  $mesNombre = 'Abril'; break;
+            case 5:  $mesNombre = 'Mayo'; break;
+            case 6:  $mesNombre = 'Junio'; break;
+            case 7:  $mesNombre = 'Julio'; break;
+            case 8:  $mesNombre = 'Agosto'; break;
+            case 9:  $mesNombre = 'Septiembre'; break;
+            case 10: $mesNombre = 'Octubre'; break;
+            case 11: $mesNombre = 'Noviembre'; break;
+            case 12: $mesNombre = 'Diciembre'; break;
+        }
+        return view("clinic.seleccionarcita",['mesNombre'=>$mesNombre]);
     }
     public function confirmar(){
         return view("clinic.citaseleccionada");
@@ -102,4 +120,20 @@ class CitaController extends Controller
         Cita::destroy($id);
         return redirect()->route('citas.index')->with('success', 'Cita eliminada');
     }
+
+public function horariosDisponibles(Request $request)
+{
+    return response()->json([
+        'ok' => true,
+        'doctor' => $request->doctor_id,
+        'fecha' => $request->fecha
+    ]);
+}
+
+
+
+     
+    }
+
+
 }

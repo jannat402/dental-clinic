@@ -13,7 +13,7 @@ class autenticarseController extends Controller
     // Mostrar login
     public function index()
     {
-        return view('iniciarsession');
+        return view('vistacliente.iniciarsession');
     }
 
     // Procesar login

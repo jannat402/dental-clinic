@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Cita;
 use App\Models\Cliente;
 use App\Models\Doctor;
+use App\Models\Horario;
 use App\Models\Tratamiento;
 use Illuminate\Database\Seeder;
 
@@ -13,7 +14,7 @@ class CitaSeeder extends Seeder
     public function run(): void
     {
         // ✔️ Generamos 200 citas
-        for ($i = 0; $i < 200; $i++) {
+        for ($i = 0; $i < 20; $i++) {
 
             $doctor = Doctor::inRandomOrder()->first();
             $cliente = Cliente::inRandomOrder()->first();
@@ -21,7 +22,7 @@ class CitaSeeder extends Seeder
 
             // ✔️ GENERACIÓN DE FECHA Y HORAS
             do {
-                $fecha = fake()->dateTimeBetween('now', '+2 days')->format('Y-m-d');
+                $fecha = fake()->dateTimeBetween('now', '+10 days')->format('Y-m-d');
 
                 $horaInicio = fake()->dateTimeBetween("$fecha 08:00", "$fecha 22:00");
                 $duracion = $tratamiento->duracion_minutos;
@@ -67,7 +68,13 @@ class CitaSeeder extends Seeder
                   ->where('hora_fin', '>', $horaInicio->format('H:i:s'));
             })
             ->exists();
+        $hayHorario = Horario::where('id_doctor', $doctor->id_doctor)
+            ->where('fecha', $fecha)
+            ->where('hora_inicio', '<', $horaInicio->format('H:i:s'))
+            ->where('hora_fin', '>', $horaFin->format('H:i:s'))
+            ->exists();
+        $sePuedeReservar = !$haySolape && $hayHorario;
 
-        return !$haySolape;
+        return $sePuedeReservar;
     }
 }

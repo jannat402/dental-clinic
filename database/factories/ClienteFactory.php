@@ -23,7 +23,7 @@ class ClienteFactory extends Factory
             'apellidos' => $this->faker->lastName().$this->faker->lastName(),
             'telefono' => $this->faker->phoneNumber(),
             'email' => $this->faker->email(),
-            'contrasenya'=>Hash::make(fake()->password()),
+            'contrasenya'=>bcrypt('password'),
             'metodo_autenticacion' =>$this->faker->randomElement(['telefono','email']),
             'fecha_dato' => $this->faker->date()
         ];

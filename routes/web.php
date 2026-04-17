@@ -66,4 +66,7 @@ Route::post('/logout', [autenticarseController::class, 'logout'])->name('logout'
 
 //citas
 Route::get('/horarios-disponibles', [CitaController::class, 'horariosDisponibles']);
+Route::post('/reservar-ciata', [CitaController::class, 'reservar']);
+Route::get('/tratamientos-listado', [TratamientoController::class, 'listar']);
+Route::get('/doctores-listado', [DoctorController::class, 'listar']);
 

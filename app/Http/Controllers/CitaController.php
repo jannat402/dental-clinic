@@ -127,16 +127,28 @@ class CitaController extends Controller
 
 public function horariosDisponibles(Request $request)
 {
-    //$doctor = Doctor::find($request->doctor_id);
     $horarioDia = Horario::all()->where("id_doctor",$request->doctorSeleccionado)->where("fecha","2026-04-" . $request->dia)->first();
-    $horas = $this->generarFranjasHorarias($horarioDia->hora_inicio, $horarioDia->hora_fin,$request->doctorSeleccionado,new DateTime("2026-04-" . $request->dia));
+    
+    if (!$horarioDia) {
+        return response()->json([
+            'ok' => false,
+            'mensaje' => 'No hay horario disponible para este día'
+        ]);
+    }
+    
+    $tratamiento = Tratamiento::find($request->tratamiento);
+    $duracion = $tratamiento ? $tratamiento->duracion_minutos : 60;
+    
+    $horas = $this->generarFranjasHorarias($horarioDia->hora_inicio, $horarioDia->hora_fin,$request->doctorSeleccionado,new DateTime("2026-04-" . $request->dia), $duracion);
     return response()->json([
         'ok' => true,
         //'doctor' => $doctor->nombre . $doctor->apellidos,
         'doctor_id'=>$request->doctorSeleccionado,
         'fecha' =>"2026-04-" . $request->dia,
         'horario' => $horarioDia,
-        'horas'=>$horas
+        'horas'=>$horas,
+        'duracion' => $duracion,
+        'precio' => $tratamiento ? $tratamiento->precio : 0
     ]);
 }
 
@@ -171,31 +183,75 @@ public function horariosDisponibles(Request $request)
 
 
 //funcion que crea las franjas y mira cuales son disponibles
-function generarFranjasHorarias($inicio, $fin,$doctor,$fecha)
+function generarFranjasHorarias($inicio, $fin,$doctor,$fecha, $duracionTratamiento = 60)
 {
     // Convertir a DateTime si son strings
     if (is_string($inicio)) $inicio = DateTime::createFromFormat('H:i:s', $inicio);
     if (is_string($fin)) $fin = DateTime::createFromFormat('H:i:s', $fin);
     
     $intervalo = new DateInterval('PT15M');
+    $duracion = new DateInterval('PT' . $duracionTratamiento . 'M');
     $franjas = [];
     $actual = clone $inicio;
     
     while ($actual <= $fin) {
         $horaStr = $actual->format('H:i'); // Solo horas y minutos para la vista
-        $inicioHoraActual =$actual;
-        $finHoraActual =  $actual->add($intervalo);
+        $inicioHoraActual = clone $actual;
+        $finHoraActual = (clone $actual)->add($duracion);
+        
         $franjas[] = [
             'hora' => $horaStr,
             'disponible' => $this->sePuedeReservar($fecha,$inicioHoraActual,$finHoraActual,$doctor)
         ];
         
-        $actual = $finHoraActual;
+        $actual = $actual->add($intervalo);
     }
     
-    return $franjas;
+return $franjas;
 }
 
+public function reservar(Request $request)
+{
+    $request->validate([
+        'doctor' => 'required',
+        'tratamiento' => 'required',
+        'fecha' => 'required',
+        'hora_inicio' => 'required'
+    ]);
+    
+    $fecha = $request->fecha;
+    $horaInicio = new DateTime($request->hora_inicio);
+    $duracion = (int)($request->duracion ?? 60);
+    $horaFin = (clone $horaInicio)->add(new DateInterval('PT' . $duracion . 'M'));
+    $doctor = $request->doctor;
+    
+    if (!$this->sePuedeReservar($fecha, $horaInicio, $horaFin, $doctor)) {
+        return response()->json([
+            'ok' => false,
+            'mensaje' => 'El horario ya no está disponible'
+        ]);
+    }
+    
+    $cita = Cita::create([
+        'id_cliente' => $request->cliente ?? 1,
+        'id_doctor' => $doctor,
+        'id_tratamiento' => $request->tratamiento,
+        'id_admin' => null,
+        'fecha' => $fecha,
+        'hora_inicio' => $horaInicio->format('H:i:s'),
+        'hora_fin' => $horaFin->format('H:i:s'),
+        'estado' => 'reservada',
+        'tipo_reserva' => 'online',
+        'fecha_dato' => now(),
+        'fecha_carga' => now()
+    ]);
+    
+    return response()->json([
+        'ok' => true,
+        'mensaje' => 'Cita reservada correctamente',
+        'cita' => $cita
+    ]);
+}
 
      
 }

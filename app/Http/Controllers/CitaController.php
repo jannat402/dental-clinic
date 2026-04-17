@@ -7,8 +7,12 @@ use App\Models\Cliente;
 use App\Models\Doctor;
 use App\Models\Tratamiento;
 use App\Models\Administrativo;
+use App\Models\Horario;
 use Carbon\Carbon;
+use DateInterval;
+use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 
 class CitaController extends Controller
 {
@@ -123,17 +127,78 @@ class CitaController extends Controller
 
 public function horariosDisponibles(Request $request)
 {
+    //$doctor = Doctor::find($request->doctor_id);
+    $horarioDia = Horario::all()->where("id_doctor",$request->doctorSeleccionado)->where("fecha","2026-04-" . $request->dia)->first();
+    $horas = $this->generarFranjasHorarias($horarioDia->hora_inicio, $horarioDia->hora_fin,$request->doctorSeleccionado,new DateTime("2026-04-" . $request->dia));
     return response()->json([
         'ok' => true,
-        'doctor' => $request->doctor_id,
-        'fecha' => $request->fecha
+        //'doctor' => $doctor->nombre . $doctor->apellidos,
+        'doctor_id'=>$request->doctorSeleccionado,
+        'fecha' =>"2026-04-" . $request->dia,
+        'horario' => $horarioDia,
+        'horas'=>$horas
     ]);
 }
 
 
+   private function sePuedeReservar($fecha, $horaInicio, $horaFin, $doctor): bool
+    {
+        // ❌ ANTES: comparación incorrecta y orWhere sin agrupar
+        // ✔️ AHORA: fórmula universal de solapamiento
+        //
+        // Dos intervalos se solapan si:
+        // inicio_existente < fin_nueva  AND  fin_existente > inicio_nueva
 
-     
+        $haySolape = Cita::where('id_doctor', $doctor)
+            ->where('fecha', $fecha)
+            ->where(function ($q) use ($horaInicio, $horaFin) {
+                $q->where('hora_inicio', '<', $horaFin->format('H:i:s'))
+                  ->where('hora_fin', '>', $horaInicio->format('H:i:s'));
+            })
+            ->exists();
+            /*
+        $hayHorario = Horario::where('id_doctor', $doctor)
+            ->where('fecha', $fecha)
+            ->where('hora_inicio', '<', $horaInicio->format('H:i:s'))
+            ->where('hora_fin', '>', $horaFin->format('H:i:s'))
+            ->exists();
+            */
+        $sePuedeReservar = !$haySolape /* && $hayHorario*/;
+
+        return $sePuedeReservar;
     }
 
 
+
+//funcion que crea las franjas y mira cuales son disponibles
+function generarFranjasHorarias($inicio, $fin,$doctor,$fecha)
+{
+    // Convertir a DateTime si son strings
+    if (is_string($inicio)) $inicio = DateTime::createFromFormat('H:i:s', $inicio);
+    if (is_string($fin)) $fin = DateTime::createFromFormat('H:i:s', $fin);
+    
+    $intervalo = new DateInterval('PT15M');
+    $franjas = [];
+    $actual = clone $inicio;
+    
+    while ($actual <= $fin) {
+        $horaStr = $actual->format('H:i'); // Solo horas y minutos para la vista
+        $inicioHoraActual =$actual;
+        $finHoraActual =  $actual->add($intervalo);
+        $franjas[] = [
+            'hora' => $horaStr,
+            'disponible' => $this->sePuedeReservar($fecha,$inicioHoraActual,$finHoraActual,$doctor)
+        ];
+        
+        $actual = $finHoraActual;
+    }
+    
+    return $franjas;
 }
+
+
+     
+}
+
+
+

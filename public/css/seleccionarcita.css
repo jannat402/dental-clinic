@@ -91,3 +91,254 @@ table tr td:hover{
     background-color: #b8c9d5;
     opacity: 1;
 }
+
+/* ============================================= */
+/* TU CSS ORIGINAL (conservado)                 */
+/* ============================================= */
+main{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: #126b9d;
+    font-size: 20px;
+    font-family: sans-serif;
+    color: #f7f6f5;
+}
+main form{
+    margin-top: 150px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:space-around ;
+}
+main form fieldset{
+    flex-basis: 30vw;
+    display: flex;
+    flex-direction: column;
+    border-width: 0px;
+}
+main form fieldset input, main form fieldset select{
+    font-size: large;
+    margin-top: 30px;
+    min-width: 400px;
+    background-color: #b8c9d5;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 50px;
+    color: #f7f6f5;
+    border-radius: 10px;
+}
+
+main form fieldset input[type="submit"]{
+    background-color: #668fab;
+    color: #f7f6f5;
+    border-radius:20px ;
+    align-self:center;
+}
+::placeholder{
+    color: #f7f6f5;
+    font-weight: 700;
+}
+h1{
+    margin-top: 100px;
+    text-align: center;
+    color: #f7f6f5;
+}
+h1 a{
+    color: inherit;
+}
+table{
+    padding: 20px;
+    color: #f7f6f5;
+    border-radius: 10px;
+    text-shadow: 10px 10px 10px rgb(0, 0, 0);
+    background-color: #b8c9d5;
+}
+table tr td:nth-of-type(6), table tr td:nth-of-type(7){
+    color: #298a97;
+}
+table tr td, table tr th{
+    padding: 10px;
+}
+table tr td:hover{
+    color:#972969
+}
+.festivo, .festivo:hover{
+    color: red;
+}
+
+#listadohoras{
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto;
+    gap:8px;
+}
+.contenedorhora{
+    background-color: #b8c9d5;
+    opacity: 0.5;
+    border: solid black 0.5px;
+    width: 100px;
+    height: 30px;
+}
+.nodisponible{
+    background-color: #b8c9d5;
+    opacity: 1;
+}
+
+/* ============================================= */
+/* MODIFICACIONES SIN SCROLL (todo visible)     */
+/* ============================================= */
+
+/* Elimino el scroll: main vuelve a ser fixed pero con overflow visible */
+main {
+    position: fixed;      /* CONSERVADO: vuelve a fixed como original */
+    overflow-y: visible;  /* NUEVO: antes no tenía, ahora explícito sin scroll */
+    overflow-x: visible;  /* NUEVO: sin scroll horizontal */
+}
+
+/* Hago que todo el contenido sea más compacto para que quepa sin scroll */
+h1 {
+    margin-top: 30px;     /* ANTES: 100px. Reducido */
+    font-size: 1.5rem;    /* NUEVO: tamaño controlado */
+}
+
+main form {
+    margin-top: 20px;     /* ANTES: 150px. Reducido drásticamente */
+    gap: 10px;            /* NUEVO: espacio entre fieldsets */
+}
+
+main form fieldset {
+    flex-basis: 45%;      /* ANTES: 30vw. Más flexible */
+}
+
+/* Inputs: elimino min-width fijo que causaba desborde */
+main form fieldset input, 
+main form fieldset select {
+    min-width: auto;      /* ANTES: 400px. Eliminado para evitar scroll */
+    width: 95%;           /* NUEVO: ancho relativo */
+    padding-left: 20px;   /* ANTES: 50px. Reducido */
+    font-size: 16px;      /* NUEVO: ligeramente más pequeño */
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* ============================================= */
+/* TABLA: se ve ENTERA en móvil SIN SCROLL       */
+/* ============================================= */
+table {
+    display: table;       /* NUEVO: comportamiento normal de tabla (no block) */
+    width: 100%;          /* NUEVO: ocupa todo el ancho disponible */
+    table-layout: fixed;  /* NUEVO: fuerza a que las celdas se ajusten al ancho */
+    padding: 10px;        /* ANTES: 20px. Reducido */
+}
+
+/* Las celdas se comprimen pero siguen siendo legibles */
+table tr td, table tr th {
+    padding: 5px 3px;     /* ANTES: 10px. Reducido al mínimo */
+    font-size: 14px;      /* NUEVO: más pequeño para que quepa todo */
+    text-align: center;   /* NUEVO: mejor centrado */
+    word-break: keep-all; /* NUEVO: evita rupturas raras */
+}
+
+/* Ajusto el grid de horas para que no desborde */
+#listadohoras {
+    grid-template-columns: repeat(7, 1fr); /* ANTES: auto auto auto... Ahora 7 columnas iguales */
+    gap: 5px;
+}
+
+.contenedorhora {
+    width: 100%;          /* ANTES: 100px fijo. Ahora se adapta al ancho */
+    height: 30px;
+}
+
+/* ============================================= */
+/* VERSIÓN MOBILE (sin scroll, tabla completa)  */
+/* ============================================= */
+
+@media (max-width: 768px) {
+    main {
+        font-size: 14px;   /* NUEVO: texto más pequeño para móvil */
+    }
+    
+    h1 {
+        margin-top: 15px;
+        font-size: 1.2rem;
+    }
+    
+    /* Formulario en columna */
+    main form {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 10px;
+    }
+    
+    main form fieldset {
+        flex-basis: auto;
+        width: 90%;
+        margin-bottom: 15px;
+    }
+    
+    /* Inputs ocupan todo el ancho disponible */
+    main form fieldset input, 
+    main form fieldset select {
+        width: 100%;
+        font-size: 14px;
+        padding: 8px 10px;
+        margin-top: 15px;
+    }
+    
+    /* TABLA: se ve COMPLETA sin scroll en móvil */
+    table {
+        padding: 5px;
+        font-size: 10px;   /* NUEVO: más pequeño pero legible */
+    }
+    
+    table tr td, table tr th {
+        padding: 4px 2px;  /* Mínimo padding para que quepan los 7 días */
+        font-size: 10px;   /* Fuente pequeña pero legible en móvil */
+    }
+    
+    /* El grid de horas se adapta */
+    #listadohoras {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+    }
+    
+    .contenedorhora {
+        height: 25px;
+    }
+    
+    /* Texto del párrafo más compacto */
+    main form fieldset p {
+        font-size: 12px;
+        margin: 10px 0;
+    }
+    
+    /* Botón de enviar */
+    main form fieldset input[type="submit"] {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+}
+
+/* Para móviles muy pequeños (menos de 480px) */
+@media (max-width: 480px) {
+    table tr td, table tr th {
+        padding: 3px 1px;
+        font-size: 9px;
+    }
+    
+    .contenedorhora {
+        height: 22px;
+    }
+    
+    h1 {
+        font-size: 1rem;
+        margin-top: 10px;
+    }
+    
+    main form fieldset p {
+        font-size: 10px;
+    }
+}

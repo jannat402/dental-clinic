@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{{asset('css/seleccionarcita.css')}}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="{{asset('js/panelCitas.js')}}"></script>
 </head>
 <body>
@@ -15,17 +16,19 @@
             <fieldset>
                 <input type="text" placeholder="Elige doctor" name="nombredoctor" id="nombredoctor">
                 <select name="tratamiento" id="tratamiento">
-                    <option value="Ortodoncia">Ortodoncia</option>
-                    <option value="Limpieza">Limpieza</option>
-                    <option value="Curetaje">Curetaje</option>
-                    <option value="Blanqueamiento">Blanqueamiento</option>
+                    <option value="1">Limpieza dental</option>
+                    <option value="2">Ortodoncia revisión</option>
+                    <option value="3">Empaste dental</option>
+                    <option value="4">Blanqueamiento dental</option>
+                    <option value="5">Estudio Ortodoncia</option>
+                    <option value="6">Primera visita</option>
                 </select>
                 <p>Si no sabe qué necesita, puede solictar consulta inicial, y se le hará el tratamiento correspondiente en clínica o le asesorá nuestro dentista. Consulta nuestro blog de salud dental y el apartado de nuestros servicios para más información</p>
                 <input type="submit" value="Pagar">
             </fieldset>
             <fieldset>
                 <div id="mes">{{$mesNombre}}</div>
-                <table>
+                <table id="tablahoras">
                     <tr>
                         <th>Lunes</th>
                         <th>Martes</th>

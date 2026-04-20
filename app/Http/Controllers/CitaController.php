@@ -168,14 +168,14 @@ public function horariosDisponibles(Request $request)
                   ->where('hora_fin', '>', $horaInicio->format('H:i:s'));
             })
             ->exists();
-            /*
+            
         $hayHorario = Horario::where('id_doctor', $doctor)
             ->where('fecha', $fecha)
             ->where('hora_inicio', '<', $horaInicio->format('H:i:s'))
             ->where('hora_fin', '>', $horaFin->format('H:i:s'))
             ->exists();
-            */
-        $sePuedeReservar = !$haySolape /* && $hayHorario*/;
+            
+        $sePuedeReservar = !$haySolape  && $hayHorario;
 
         return $sePuedeReservar;
     }

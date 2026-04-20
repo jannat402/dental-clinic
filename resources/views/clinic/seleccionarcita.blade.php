@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{asset('css/seleccionarcita.css')}}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="{{asset('js/panelCitas.js')}}"></script>
 </head>
 <body>
     <main>
@@ -12,18 +15,18 @@
         <p> Aquí puede reservar cita. Para cualquier problema o para agendar cita por teléfono, llama al 666666666</p>
         <form action="{{route('citaseleccionada')}}">
             <fieldset>
-                <input type="text" placeholder="Elige doctor" name="nombredoctor" id="nombredoctor">
-                <select name="tratamiento" id="tratamiento">
-                    <option value="Ortodoncia">Ortodoncia</option>
-                    <option value="Limpieza">Limpieza</option>
-                    <option value="Curetaje">Curetaje</option>
-                    <option value="Blanqueamiento">Blanqueamiento</option>
+                <select name="nombredoctor" id="nombredoctor">
+                    <option value="">Seleccione un doctor</option>
                 </select>
+                <select name="tratamiento" id="tratamiento">
+                </select>
+                <input type="hidden" name="duracion_tratamiento" id="duracion_tratamiento">
+                <input type="hidden" name="precio_tratamiento" id="precio_tratamiento">
                 <p>Si no sabe qué necesita, puede solictar consulta inicial, y se le hará el tratamiento correspondiente en clínica o le asesorá nuestro dentista. Consulta nuestro blog de salud dental y el apartado de nuestros servicios para más información</p>
-                <input type="submit" value="Pagar">
             </fieldset>
             <fieldset>
-                <table>
+                <div id="mes">{{$mesNombre}}</div>
+                <table id="tablahoras">
                     <tr>
                         <th>Lunes</th>
                         <th>Martes</th>
@@ -78,52 +81,14 @@
                         <td>30</td>
                     </tr>
                 </table>
-                <div id="horas">
-                    <h2>Seleccione una franja</h2>
+<div id="horas" style="display: none;">
+                    <h2 id="tituloHoras">Seleccione una franquicia</h2>
                     <div id="listadohoras">
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
                     </div>
+                    <div id="botonReservar" style="display: none; margin-top: 20px;">
+                        <input type="submit" value="Reservar cita">
+                    </div>
+                </div>
                 </div>
 
                 <input type="hidden" name="fecha" id="fecha">

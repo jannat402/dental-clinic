@@ -17,13 +17,16 @@ class DoctorSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = Faker::create();
+        //$faker = Faker::create();
         //
+        /*
             DB::table('doctor')->insert([
                 [
                     'nombre' => 'Laura',
                     'apellidos' => 'Lopez',
                     'especialidad' =>'Higienista',
+                    'email'=>'ifasiofs@jnokfads.es',
+                    'contrasenya' =>'sdfauojhojfasd',
                     'estado' => 'activo',
                     'fecha_dato' =>now(),
                     'fecha_carga' =>now()
@@ -32,6 +35,8 @@ class DoctorSeeder extends Seeder
                     'nombre' => 'Carlos',
                     'apellidos' => 'Ruiz Garcia',
                     'especialidad' =>'Dentista General',
+                    'email'=>'nfhdn@jnokfads.es',
+                    'contrasenya' =>'sdfauojhojfasd',
                     'estado' => 'vacaciones',
                     'fecha_dato' =>now(),
                     'fecha_carga' =>now()
@@ -40,6 +45,8 @@ class DoctorSeeder extends Seeder
                     'nombre' => 'Cristobal',
                     'apellidos' => 'Ramon de los Santos',
                     'especialidad' =>'Dentista general',
+                    'email'=>'ifasiofs@adf.es',
+                    'contrasenya' =>'adsffadfd',
                     'estado' => 'activo',
                     'fecha_dato' =>'2025-05-27',
                     'fecha_carga' =>now()
@@ -47,6 +54,8 @@ class DoctorSeeder extends Seeder
                 [
                     'nombre' => 'Rita',
                     'apellidos' => 'Segovia Catala',
+                    'email'=>'ifasifhdgsofs@adf.es',
+                    'contrasenya' =>'adsfffdgadfd',
                     'especialidad' =>'Ortodoncia',
                     'estado' => 'baja',
                     'fecha_dato' =>'2026-02-23',
@@ -54,6 +63,7 @@ class DoctorSeeder extends Seeder
                 ]
 
         ]);
+        */
         /*
         for ($i = 0; $i < 20; $i++) 
             { 
@@ -67,6 +77,6 @@ class DoctorSeeder extends Seeder
                 ]);
              }
                 */
-             Doctor::factory(2)->create();
+             Doctor::factory(8)->create();
     }
 }

@@ -1,93 +1,218 @@
-main{
+main {
     position: fixed;
-    left: 0px;
-    top: 0px;
+    left: 0;
+    top: 0;
     width: 100vw;
     height: 100vh;
     background-color: #126b9d;
     font-size: 20px;
     font-family: sans-serif;
     color: #f7f6f5;
+    overflow: visible;
 }
-main form{
-    margin-top: 150px;
+
+main form {
+    margin-top: 20px;
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    justify-content:space-around ;
-}
-main form fieldset{
-    flex-basis: 30vw;
-    display: flex;
-    flex-direction: column;
-    border-width: 0px;
-}
-main form fieldset input, main form fieldset select{
-    font-size: large;
-    margin-top: 30px;
-    min-width: 400px;
-    background-color: #b8c9d5;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 50px;
-    color: #f7f6f5;
-    border-radius: 10px;
+    justify-content: space-around;
+    gap: 10px;
 }
 
-main form fieldset input[type="submit"]{
-    background-color: #668fab;
-    color: #f7f6f5;
-    border-radius:20px ;
-    align-self:center;
+main form fieldset {
+    flex-basis: 45%;
+    display: flex;
+    flex-direction: column;
+    border-width: 0;
 }
-::placeholder{
+
+main form fieldset input,
+main form fieldset select {
+    font-size: 16px;
+    margin-top: 30px;
+    width: 95%;
+    background-color: #b8c9d5;
+    padding: 10px 10px 10px 20px;
+    color: #f7f6f5;
+    border-radius: 10px;
+    border: none;
+}
+
+main form fieldset input::placeholder {
     color: #f7f6f5;
     font-weight: 700;
 }
-h1{
-    margin-top: 100px;
+
+main form fieldset input[type="submit"] {
+    background-color: #668fab;
+    align-self: center;
+    cursor: pointer;
+}
+
+h1 {
+    margin-top: 30px;
     text-align: center;
-    color: #f7f6f5;
+    font-size: 1.5rem;
 }
-h1 a{
-    color: inherit;
-}
-table{
-    padding: 20px;
+
+table {
+    display: table;
+    width: 100%;
+    padding: 10px;
     color: #f7f6f5;
     border-radius: 10px;
     text-shadow: 10px 10px 10px rgb(0, 0, 0);
     background-color: #b8c9d5;
+    table-layout: fixed;
 }
-table tr td:nth-of-type(6), table tr td:nth-of-type(7){
+
+table tr td,
+table tr th {
+    padding: 5px 3px;
+    font-size: 14px;
+    text-align: center;
+    word-break: keep-all;
+}
+
+table tr td:nth-of-type(6),
+table tr td:nth-of-type(7) {
     color: #298a97;
 }
-table tr td, table tr th{
-    padding: 10px;
+
+table tr td:hover {
+    color: #972969;
 }
-table tr td:hover{
-    color:#972969
-}
-.festivo, .festivo:hover{
+
+.festivo,
+.festivo:hover {
     color: red;
 }
 
+#horas {
+    display: none;
+}
 
-/**Visualizador horas*/
-#listadohoras{
+#listadohoras {
     display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto;
-    gap:8px;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
 }
-.contenedorhora{
-    background-color: #b8c9d5;
-    opacity: 0.5;
-    border: solid black 0.5px;
-    width: 100px;
-    height: 30px;
 
-}
-.nodisponible{
+.contenedorhora {
     background-color: #b8c9d5;
-    opacity: 1;
+    border: solid black 0.5px;
+    width: 100%;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.contenedorhora.disponible:hover {
+    background-color: #668fab;
+}
+
+.nodisponible {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#botonReservar {
+    display: flex;
+    justify-content: center;
+}
+
+#botonReservar input[type="submit"] {
+    background-color: #668fab;
+    color: #f7f6f5;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 30px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    main {
+        font-size: 14px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    h1 {
+        margin-top: 15px;
+        font-size: 1.2rem;
+    }
+
+    main form {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    main form fieldset {
+        flex-basis: auto;
+        width: 90%;
+        margin-bottom: 15px;
+    }
+
+    main form fieldset input,
+    main form fieldset select {
+        width: 100%;
+        font-size: 14px;
+        padding: 8px 10px;
+        margin-top: 15px;
+    }
+
+    table {
+        padding: 5px;
+        font-size: 10px;
+    }
+
+    table tr td,
+    table tr th {
+        padding: 4px 2px;
+        font-size: 10px;
+    }
+
+    #listadohoras {
+        gap: 4px;
+    }
+
+    .contenedorhora {
+        height: 25px;
+    }
+
+    main form fieldset p {
+        font-size: 12px;
+        margin: 10px 0;
+    }
+
+    main form fieldset input[type="submit"] {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    table tr td,
+    table tr th {
+        padding: 3px 1px;
+        font-size: 9px;
+    }
+
+    .contenedorhora {
+        height: 22px;
+    }
+
+    h1 {
+        font-size: 1rem;
+        margin-top: 10px;
+    }
+
+    main form fieldset p {
+        font-size: 10px;
+    }
 }

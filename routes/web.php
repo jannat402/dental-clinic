@@ -14,11 +14,9 @@ use App\Http\Controllers\CitaController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\DoctorHistorialController;
 use App\Http\Controllers\BlogController;
-use App\Http\Controllers\citasController;
 use App\Http\Controllers\panelAdministrativoController;
 use App\Http\Controllers\panelUsuarioController;
-use App\Http\Controllers\RegistroController;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PaymentController;
 
 // Página principal opcional
 Route::get('/', function () {
@@ -42,8 +40,8 @@ Route::get('/index', function(){
 
 Route::get('/inici',[ autenticarseController::class,'index'])->name("paginainici");
 Route::get('/registro',[ autenticarseController::class,'registrar'])->name("registro");
-Route::get('/cita',[ citaController::class,'pedir'])->name("pedircita");
-Route::get('/citas',[ citaController::class,'confirmar'])->name("citaseleccionada");
+Route::get('/cita',[ CitaController::class,'pedir'])->name("pedircita");
+Route::get('/citas',[ CitaController::class,'confirmar'])->name("citaseleccionada");
 Route::get('/panel',[ panelUsuarioController::class,'index'])->name("iniciusuario");
 Route::get('/panel/mostrar',[ panelUsuarioController::class,'mostrar'])->name("mostrar");
 Route::get('/panel/modificar',[ panelUsuarioController::class,'cambiar'])->name("cambiar");
@@ -62,3 +60,19 @@ Route::post('/registro', [autenticarseController::class, 'register'])->name('reg
 
 // LOGOUT
 Route::post('/logout', [autenticarseController::class, 'logout'])->name('logout');
+
+
+//citas
+Route::get('/horarios-disponibles', [CitaController::class, 'horariosDisponibles']);
+Route::post('/reservar-ciata', [CitaController::class, 'reservar']);
+Route::get('/tratamientos-listado', [TratamientoController::class, 'listar']);
+Route::get('/doctores-listado', [DoctorController::class, 'listar']);
+
+
+//pagos
+Route::post('/payment/create', [PaymentController::class, 'createPayment']);
+Route::get('/payment', [PaymentController::class, 'index']);
+Route::get('/payment/success', [PaymentController::class, 'success']);
+
+
+

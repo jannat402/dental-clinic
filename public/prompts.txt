@@ -1,0 +1,2 @@
+quiero simplificar la vista de la pasarela de pago, que no aparezca el menu que sale actualmente, y mas bien solo los datos necesarios para realizar el pago (nombre, tajeta, fecha de caducidad, cvv)
+Quiero que el importe que aparezc en stripe a pagar no sea siempre 10, sino el precio del tratramiento segun consta en la base de datos, en la cita reservada, 

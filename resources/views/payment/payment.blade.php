@@ -12,11 +12,13 @@
             <div class="card-body">
                 <div class="text-center mb-4">
                     <h5 class="text-muted">Total a pagar</h5>
-                    <h2 class="fw-bold text-primary">10,00 €</h2>
+                    <h2 class="fw-bold text-primary">{{ number_format($monto / 100, 2) }} €</h2>
                 </div>
 
                 <form id="payment-form">
                     @csrf
+                    <input type="hidden" name="cita_id" id="cita_id" value="{{ $citaId }}">
+                    <input type="hidden" name="amount" id="amount" value="{{ $monto }}">
                     <div class="mb-3">
                         <label class="form-label">Nome completo</label>
                         <input type="text" class="form-control" id="nombre" placeholder="Juan García" required>
@@ -44,7 +46,7 @@
                     <div id="card-errors" class="alert alert-danger d-none"></div>
 
                     <button type="submit" class="btn btn-primary w-100 py-2" id="submit-btn">
-                        <span id="btn-text">Pagar 10,00 €</span>
+                        <span id="btn-text">Pagar {{ number_format($monto / 100, 2) }} €</span>
                         <span id="spinner" class="spinner-border spinner-border-sm d-none"></span>
                     </button>
                 </form>
@@ -80,6 +82,7 @@ const cardErrors = document.getElementById('card-errors');
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const amount = parseInt(document.getElementById('amount').value) / 100;
     submitBtn.disabled = true;
     btnText.textContent = 'Procesando...';
     spinner.classList.remove('d-none');
@@ -92,7 +95,10 @@ form.addEventListener('submit', async (e) => {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
-            body: JSON.stringify({ amount: 1000 })
+            body: JSON.stringify({ 
+                amount: parseInt(document.getElementById('amount').value),
+                cita_id: document.getElementById('cita_id').value
+            })
         });
 
         const data = await res.json();
@@ -111,20 +117,24 @@ form.addEventListener('submit', async (e) => {
             }
         });
 
+        const amount = parseInt(document.getElementById('amount').value) / 100;
+
         if (error) {
             cardErrors.textContent = error.message;
             cardErrors.classList.remove('d-none');
             submitBtn.disabled = false;
-            btnText.textContent = 'Pagar 10,00 €';
+            btnText.textContent = 'Pagar ' + amount.toFixed(2) + ' €';
             spinner.classList.add('d-none');
         } else if (paymentIntent.status === 'succeeded') {
-            window.location.href = '/payment/success?status=succeeded';
+            const citaId = data.cita_id || new URLSearchParams(window.location.search).get('cita');
+            window.location.href = '/payment/success?status=succeeded&cita_id=' + encodeURIComponent(citaId);
         }
     } catch (err) {
+        const amount = parseInt(document.getElementById('amount').value) / 100;
         cardErrors.textContent = 'Erro ao procesar o pagamento. Tente de novo.';
         cardErrors.classList.remove('d-none');
         submitBtn.disabled = false;
-        btnText.textContent = 'Pagar 10,00 €';
+        btnText.textContent = 'Pagar ' + amount.toFixed(2) + ' €';
         spinner.classList.add('d-none');
     }
 });

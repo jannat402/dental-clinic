@@ -103,8 +103,8 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if (response.ok) {
-                    alert('Cita reservada correctamente');
-                    location.reload();
+                    alert('Cita reservada. Proceda ao pagamento.');
+                    window.location.href = '/payment?cita=' + response.cita.id_cita;
                 } else {
                     alert(response.mensaje);
                 }

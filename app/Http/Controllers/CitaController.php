@@ -240,7 +240,7 @@ public function reservar(Request $request)
         'fecha' => $fecha,
         'hora_inicio' => $horaInicio->format('H:i:s'),
         'hora_fin' => $horaFin->format('H:i:s'),
-        'estado' => 'reservada',
+        'estado' => 'pendiente_pago',
         'tipo_reserva' => 'online',
         'fecha_dato' => now(),
         'fecha_carga' => now()
@@ -248,7 +248,7 @@ public function reservar(Request $request)
     
     return response()->json([
         'ok' => true,
-        'mensaje' => 'Cita reservada correctamente',
+        'mensaje' => 'Cita creada. Proceda ao pagamento.',
         'cita' => $cita
     ]);
 }

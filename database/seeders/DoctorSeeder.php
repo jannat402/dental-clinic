@@ -18,12 +18,13 @@ class DoctorSeeder extends Seeder
     public function run(): void
     {
         $faker = Faker::create();
-        //
-            DB::table('doctor')->insert([
+        DB::table('doctor')->insert([
                 [
                     'nombre' => 'Laura',
                     'apellidos' => 'Lopez',
+                    'email' => 'laura@example.com',
                     'especialidad' =>'Higienista',
+                    'contrasenya' => Hash::make('1234'),
                     'estado' => 'activo',
                     'fecha_dato' =>now(),
                     'fecha_carga' =>now()
@@ -31,6 +32,8 @@ class DoctorSeeder extends Seeder
                 [
                     'nombre' => 'Carlos',
                     'apellidos' => 'Ruiz Garcia',
+                    'email' => 'carlos@example.com',
+                    'especialidad' =>'Higienista',
                     'especialidad' =>'Dentista General',
                     'estado' => 'vacaciones',
                     'fecha_dato' =>now(),
@@ -39,6 +42,8 @@ class DoctorSeeder extends Seeder
                 [
                     'nombre' => 'Cristobal',
                     'apellidos' => 'Ramon de los Santos',
+                    'email' => 'cristobal@example.com',
+                    'especialidad' =>'Higienista',
                     'especialidad' =>'Dentista general',
                     'estado' => 'activo',
                     'fecha_dato' =>'2025-05-27',
@@ -47,6 +52,8 @@ class DoctorSeeder extends Seeder
                 [
                     'nombre' => 'Rita',
                     'apellidos' => 'Segovia Catala',
+                    'email' => 'rita@example.com',
+                    'especialidad' =>'Higienista',
                     'especialidad' =>'Ortodoncia',
                     'estado' => 'baja',
                     'fecha_dato' =>'2026-02-23',

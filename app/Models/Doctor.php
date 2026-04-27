@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Doctor extends Model
+class Doctor extends Authenticatable
 {
     use HasFactory;
+
     protected $table = 'doctor';
     protected $primaryKey = 'id_doctor';
     public $timestamps = false;
@@ -20,8 +21,17 @@ class Doctor extends Model
         'especialidad',
         'estado',
         'fecha_dato',
-        'fecha_carga'
+        'fecha_carga',
     ];
+
+    protected $hidden = [
+        'contrasenya',
+    ];
+
+    public function getAuthPassword()
+    {
+        return $this->contrasenya;
+    }
 
     public function horarios()
     {

@@ -13,7 +13,7 @@ class autenticarseController extends Controller
     // Mostrar login
     public function index()
     {
-        return view('iniciarsession');
+        return view('vistacliente.iniciarsession');
     }
 
     // Procesar login
@@ -21,11 +21,11 @@ class autenticarseController extends Controller
     {
         $request->validate([
             'login' => 'required',
-            'contrasenya' => 'required',
+            'password' => 'required',
         ]);
 
         $login = $request->login;
-        $contrasenya = $request->contrasenya;
+        $contrasenya = $request->password;
 
         // CLIENTE
         $user = Cliente::where('email', $login)
@@ -39,6 +39,7 @@ class autenticarseController extends Controller
                 'cliente_nombre' => $user->nombre,
             ]);
 
+            // Cliente logueado → ir a pedir cita
             return redirect()->route('iniciusuario');
         }
 
@@ -52,7 +53,7 @@ class autenticarseController extends Controller
                 'doctor_nombre' => $doctor->nombre,
             ]);
 
-            return redirect()->route('agenda'); // Panel del doctor
+            return redirect()->route('agenda');
         }
 
         // ADMINISTRADOR
@@ -65,17 +66,16 @@ class autenticarseController extends Controller
                 'admin_nombre' => $admin->nombre,
             ]);
 
-            return redirect()->route('paneladministrativo'); // Panel admin
+            return redirect()->route('vistaadministrador.paneladministrativo');
         }
 
-        // SI NINGUNO COINCIDE
         return back()->withErrors(['login' => 'Credenciales incorrectas']);
     }
 
     // Mostrar registro
     public function registrar()
     {
-        return view('registro');
+        return view('vistacliente.registro');
     }
 
     // Procesar registro
@@ -89,7 +89,7 @@ class autenticarseController extends Controller
             'contrasenya' => 'required|confirmed|min:4',
         ]);
 
-        Cliente::create([
+        $cliente = Cliente::create([
             'nombre' => $request->nombre,
             'apellidos' => $request->apellidos,
             'email' => $request->email,
@@ -100,7 +100,14 @@ class autenticarseController extends Controller
             'fecha_carga' => now(),
         ]);
 
-        return redirect()->route('paginainici')->with('success', 'Registro completado');
+        // 🔥 Iniciar sesión automáticamente
+        session([
+            'cliente_id' => $cliente->id_cliente,
+            'cliente_nombre' => $cliente->nombre,
+        ]);
+
+        // 🔥 Después de registrarse → ir a pedir cita
+        return redirect()->route('pedircita');
     }
 
     // Logout

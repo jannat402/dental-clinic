@@ -1,93 +1,130 @@
-main{
+main {
     position: fixed;
-    left: 0px;
-    top: 0px;
-    width: 100vw;
-    height: 100vh;
+    inset: 0;
     background-color: #126b9d;
-    font-size: 20px;
+    color: #f7f6f5;
     font-family: sans-serif;
-    color: #f7f6f5;
-}
-main form{
-    margin-top: 150px;
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content:space-around ;
-}
-main form fieldset{
-    flex-basis: 30vw;
-    display: flex;
-    flex-direction: column;
-    border-width: 0px;
-}
-main form fieldset input, main form fieldset select{
-    font-size: large;
-    margin-top: 30px;
-    min-width: 400px;
-    background-color: #b8c9d5;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 50px;
-    color: #f7f6f5;
-    border-radius: 10px;
+    overflow-y: auto;
+    padding: 40px;
+    text-align: center;
 }
 
-main form fieldset input[type="submit"]{
-    background-color: #668fab;
-    color: #f7f6f5;
-    border-radius:20px ;
-    align-self:center;
+h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
 }
-::placeholder{
-    color: #f7f6f5;
+
+.btn-volver {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #668fab;
+    color: #0a3c62;
+    font-weight: 900;
+    border-radius: 10px;
+    text-decoration: none;
+}
+
+.selector, .calendario {
+    margin: 20px auto;
+    width: 90%;
+    max-width: 900px;
+    background-color: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.selector select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: none;
+}
+
+.info {
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.grid-dias {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.dia {
+    padding: 15px;
+    background-color: #668fab;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.dia:hover {
+    background-color: #f7f6f5;
+    color: #668fab;
+}
+
+.dia.no-disponible {
+    background-color: #8998a5;
+    cursor: not-allowed;
+}
+
+.grid-horas {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.hora {
+    padding: 10px;
+    background-color: #668fab;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.hora.no-disponible {
+    background-color: #8998a5;
+    cursor: not-allowed;
+}
+
+.btn-confirmar {
+    margin-top: 20px;
+    padding: 15px 30px;
+    background-color: #f7f6f5;
+    color: #0a3c62;
+    font-weight: 900;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.selector select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f7f6f5;
+    color: #0a3c62;
     font-weight: 700;
 }
-h1{
-    margin-top: 100px;
-    text-align: center;
-    color: #f7f6f5;
-}
-h1 a{
-    color: inherit;
-}
-table{
-    padding: 20px;
-    color: #f7f6f5;
-    border-radius: 10px;
-    text-shadow: 10px 10px 10px rgb(0, 0, 0);
-    background-color: #b8c9d5;
-}
-table tr td:nth-of-type(6), table tr td:nth-of-type(7){
-    color: #298a97;
-}
-table tr td, table tr th{
-    padding: 10px;
-}
-table tr td:hover{
-    color:#972969
-}
-.festivo, .festivo:hover{
-    color: red;
+
+/* FORMULARIO A LA IZQUIERDA + HORARIO A LA DERECHA */
+.contenedor-flex {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    margin-top: 20px;
 }
 
+/* Ambos fieldsets del mismo tamaño */
+.selector, .calendario {
+    width: 45%;
+}
 
-/**Visualizador horas*/
-#listadohoras{
-    display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto;
-    gap:8px;
-}
-.contenedorhora{
-    background-color: #b8c9d5;
-    opacity: 0.5;
-    border: solid black 0.5px;
-    width: 100px;
-    height: 30px;
-
-}
-.nodisponible{
-    background-color: #b8c9d5;
-    opacity: 1;
-}

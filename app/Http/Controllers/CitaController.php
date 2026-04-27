@@ -8,6 +8,7 @@ use App\Models\Doctor;
 use App\Models\Tratamiento;
 use App\Models\Administrativo;
 use Illuminate\Http\Request;
+use App\Models\Horario;
 
 class CitaController extends Controller
 {
@@ -18,15 +19,13 @@ class CitaController extends Controller
     }
 
     public function pedir(){
-        return view("clinic.seleccionarcita");
+        $doctores = Doctor::all();
+        $tratamientos = Tratamiento::all();
+        return view("clinic.seleccionarcita", compact('doctores', 'tratamientos'));
     }
     public function confirmar(){
         return view("clinic.citaseleccionada");
     }
-
-
-
-
 
     public function create()
     {
@@ -101,5 +100,34 @@ class CitaController extends Controller
     {
         Cita::destroy($id);
         return redirect()->route('citas.index')->with('success', 'Cita eliminada');
+    }
+
+    // para obtener los dias en los que los doctores estan diponibles
+    public function obtenerDias($idDoctor)
+    {
+        $dias = Horario::where('id_doctor', $idDoctor)
+                    ->select('fecha')
+                    ->distinct()
+                    ->orderBy('fecha')
+                    ->get();
+
+        return response()->json($dias);
+    }
+
+    // para obtener las horas en los que los doctores estan diponibles
+    public function obtenerHoras($idDoctor, $fecha)
+    {
+        $horarios = Horario::where('id_doctor', $idDoctor)
+                        ->where('fecha', $fecha)
+                        ->get();
+
+        $ocupadas = Cita::where('id_doctor', $idDoctor)
+                        ->where('fecha', $fecha)
+                        ->pluck('hora_inicio');
+
+        return response()->json([
+            'horarios' => $horarios,
+            'ocupadas' => $ocupadas
+        ]);
     }
 }

@@ -1,52 +1,100 @@
-main{
+/* Fondo de pantalla */
+.main, main {
     position: fixed;
-    left: 0px;
-    top: 0px;
+    inset: 0;
     background-image: url("../images/landingpage.png");
     background-repeat: no-repeat;
-    background-size:cover;
-    opacity: 0.8;
+    background-size: cover;
+    background-position: center;
     width: 100vw;
     height: 100vh;
 }
-#logo img{
-    height: 80px;
-    width: auto;
+
+/* Capa oscura para mejorar la legibilidad */
+main::before {
+    content: "";
     position: absolute;
-    bottom: 30px;
-    left: 30px;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 0;
 }
-#centralButton{
-    position: absolute;
-    top:70vh;
-    right: 40vw;
+
+/* Header */
+.header {
+    position: relative;
+    z-index: 2;
+    padding: 20px 40px;
 }
-#centralButton button{
-    width: fit-content;
-    font-size: 3em;
-    background-color: #126b9dFF;
-    border-radius: 20px;
-    padding: 20px 70px 30px 70px;
-    vertical-align:middle;
-    color: white;
-}
-#centralButton button:hover{
-    background-color: rgb(9, 59, 88);
-    border: white solid 2px;
-}
-/*Botones arriba*/
-header ul{
-    margin-right: 10%;
-    width: 90%;
-    gap: 20px;
+
+.nav ul {
     display: flex;
-    justify-content:flex-end;
-}
-header ul li{
+    justify-content: flex-end;
+    gap: 30px;
     list-style: none;
-    color: #126b9d;
-    font-weight: 600;
 }
-header ul li:hover {
+
+.nav ul li a {
     color: white;
+    font-size: 1.2em;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.nav ul li a:hover {
+    color: #126b9d;
+}
+
+/* Hero section */
+.hero {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    height: 80vh;
+    padding: 0 40px;
+}
+
+/* Texto principal */
+.hero-content {
+    max-width: 500px;
+    color: white;
+}
+
+.hero-content h1 {
+    font-size: 3.2em;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.hero-content p {
+    font-size: 1.3em;
+    margin-bottom: 25px;
+}
+
+/* Botón principal */
+.btn-primary {
+    display: inline-block;
+    padding: 15px 40px;
+    background-color: #126b9d;
+    color: white;
+    text-decoration: none;
+    font-size: 1.5em;
+    border-radius: 15px;
+    transition: 0.3s;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: rgb(9, 59, 88);
+    border: 2px solid white;
+}
+
+/* Logo */
+.hero-logo img {
+    width: 350px;
+    filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
 }

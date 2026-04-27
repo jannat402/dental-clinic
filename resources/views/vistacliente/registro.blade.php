@@ -1,25 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{{asset('css/registro.css')}}">
+    <title>Dental Clinic - Registro</title>
+    <link rel="stylesheet" href="{{ asset('css/registro1.css') }}">
 </head>
 <body>
     <main>
-        <h1>¿Ya estás registrado? Entonces, <a href="{{route('paginainici')}}">inicia sesión</a></h1>
-        <form action="{{route('registro.process')}}" method="post">
+
+        <h1>¿Ya tienes cuenta? <a href="{{ route('paginainici') }}">Inicia sesión</a></h1>
+
+        {{-- MENSAJE DE ERROR --}}
+        @if ($errors->any())
+            <div class="error-box">
+                {{ $errors->first() }}
+            </div>
+        @endif
+
+        <form action="{{ route('registro.process') }}" method="POST">
             @csrf
+
             <fieldset>
-                <input type="text" placeholder="Nom" name="nombre" required>
-                <input type="text" placeholder="Cognoms" name="apellidos" required>
-                <input type="email" placeholder="Email" name="email" required>
-                <input type="tel" name="telefono" id="telefono" placeholder="Telefono de contacte">
+                <input type="text" placeholder="Nombre" name="nombre" value="{{ old('nombre') }}" required>
+                <input type="text" placeholder="Apellidos" name="apellidos" value="{{ old('apellidos') }}" required>
+                <input type="email" placeholder="Email" name="email" value="{{ old('email') }}" required>
+                <input type="tel" placeholder="Teléfono" name="telefono" value="{{ old('telefono') }}">
             </fieldset>
+
             <fieldset>
-                <input type="password" name="contrasenya" id="contrasenya" placeholder="contrasenya" required>
-                <input type="password" name="contrasenya_confirmation" id="contrasenya_confirmation" placeholder="Repite la contraseña" required>
+                <input type="password" placeholder="Contraseña" name="contrasenya" required>
+                <input type="password" placeholder="Repite la contraseña" name="contrasenya_confirmation" required>
                 <input type="submit" value="Registrarse">
             </fieldset>
         </form>

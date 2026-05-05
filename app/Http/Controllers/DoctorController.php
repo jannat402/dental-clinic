@@ -65,4 +65,10 @@ class DoctorController extends Controller
         Doctor::destroy($id);
         return redirect()->route('doctores.index')->with('success', 'Doctor eliminado');
     }
+
+    public function listar()
+    {
+        $doctores = Doctor::where('estado', 'activo')->get();
+        return response()->json($doctores);
+    }
 }

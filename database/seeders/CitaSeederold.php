@@ -1,54 +1,47 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Seeders;
 
 use App\Models\Cita;
 use App\Models\Cliente;
 use App\Models\Doctor;
-use App\Models\Horario;
 use App\Models\Tratamiento;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Cita>
- */
-class CitaFactory extends Factory
+class CitaSeeder extends Seeder
 {
-
-
-
-
-    
     /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
+     * Run the database seeds.
      */
-    public function definition(): array
+    public function run(): void
     {
+        //
+        //Cita::factory()->count(200)->create();
+        for ($i = 0; $i < 100; $i++){
         $doctor = Doctor::inRandomOrder()->first();
         $cliente = Cliente::inRandomOrder()->first();
         $tratamiento = Tratamiento::inRandomOrder()->first();
         do{
-            $fecha = $this->faker->dateTimeBetween('now', '+2 days')->format('Y-m-d');
-            $horaInicio = $this->faker->dateTimeBetween("$fecha 08:00", "$fecha 22:00");
+            $fecha = fake()->dateTimeBetween('now', '+2 days')->format('Y-m-d');
+            $horaInicio = fake()->dateTimeBetween("$fecha 08:00", "$fecha 22:00");
             $duracion = Tratamiento::where('id_tratamiento', $tratamiento->id_tratamiento)->value('duracion_minutos');
             $horaFin = (clone $horaInicio)->modify('+' . $duracion . ' minutes');
         
         }while(!$this->sePuedeReservar($fecha, $horaInicio,$horaFin,$doctor));
 
 
-        return [
-            'id_cliente' =>$cliente,
-            'id_doctor' => $doctor,
-            'id_tratamiento' =>$tratamiento,
+        Cita::create ([
+            'id_cliente' =>$cliente->id_cliente,
+            'id_doctor' => $doctor->id_doctor,
+            'id_tratamiento' =>$tratamiento->id_tratamiento,
             'id_admin'=>null,
             'hora_inicio'=> $horaInicio,
             'fecha' =>$fecha,
             'hora_fin' => $horaFin,
             'estado' => 'reservada',
             'tipo_Reserva'=>'presencial',
-            'fecha_dato' => $this->faker->optional()->date(), 
+            'fecha_dato' => now(), 
             'fecha_carga' => now(),
 
             /**
@@ -65,27 +58,29 @@ class CitaFactory extends Factory
         'fecha_dato',
         'fecha_carga'
              */
-        ];
+        ]);
+        }
     }
     private function sePuedeReservar($fecha, $horaInicio,$horaFin,$doctor): bool{
         //Comprobar que no hay otra cita con el mismo doctor, en la misma fecha y la misma hora de inicio y la misma hora final
         //miramos si hay alguna cita el mismo dia, que termine despues del inicio de la cita, y termine antes de acabar la nuestra
         $hora_inicio_formateada2=$horaInicio->format('H:i:s');
         $hora_fin_formateada2 = $horaFin->format('H:i:s');
-        //$query = Cita::all()->where('id_doctor', '=', $doctor->id);
         $query2 = Cita::where('fecha', $fecha)
         
                 ->where('id_doctor', '=', $doctor->id)
                 ->where(function($q) use ($hora_inicio_formateada2) {
-                    $q->where('hora_inicio', '>', $hora_inicio_formateada2)
-                    ->where('hora_fin', '<', $hora_inicio_formateada2);
+                    $q->where('hora_inicio', '<', $hora_inicio_formateada2)
+                    ->where('hora_fin', '>', $hora_inicio_formateada2);
                 })
                 ->orWhere(function($q) use ($hora_fin_formateada2) {
-                    $q->where('hora_inicio', '>', $hora_fin_formateada2)
-                    ->where('hora_fin', '<', $hora_fin_formateada2);
+                    $q->where('hora_inicio', '<', $hora_fin_formateada2)
+                    ->where('hora_fin', '>', $hora_fin_formateada2);
                 });
             
- 
+    // 🔍 IMPRIMIR la consulta SQL completa
+
+    
     // 🔍 IMPRIMIR los bindings (valores que reemplazan los ?)
 
     
@@ -106,8 +101,14 @@ class CitaFactory extends Factory
         $diaDisponible = Horario::where('fecha', $fecha)->where('id_doctor',$doctor->id)->value('disponible');
         */
         $sePuedeReservar = !$hayOtraCita /*&& $hayHorario && $diaDisponible && $citaEstaEnHorario*/;
-        dump(($hayOtraCita? "no se ha reservado" :"no se ha podido")); 
+
         return $sePuedeReservar;
     }
 
-}
+
+
+
+
+
+    }
+

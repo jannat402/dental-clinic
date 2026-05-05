@@ -65,4 +65,10 @@ class TratamientoController extends Controller
         Tratamiento::destroy($id);
         return redirect()->route('tratamientos.index')->with('success', 'Tratamiento eliminado');
     }
+
+    public function listar()
+    {
+        $tratamientos = Tratamiento::all();
+        return response()->json($tratamientos);
+    }
 }

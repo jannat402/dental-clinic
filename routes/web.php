@@ -17,6 +17,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\panelAdministrativoController;
 use App\Http\Controllers\panelUsuarioController;
 use App\Http\Controllers\DoctorPanelController;
+use App\Http\Controllers\PaymentController;
 
 // LANDING PAGE
 Route::get('/', function () {
@@ -88,8 +89,45 @@ Route::resource('citas', CitaController::class);
 Route::resource('pagos', PagoController::class);
 Route::resource('doctor-historial', DoctorHistorialController::class)->only(['index', 'create', 'store', 'destroy']);
 Route::resource('blog', BlogController::class);
+Route::get('/index', function(){
+    return view('clinic/landingpage');
+});
+
+Route::get('/inici',[ autenticarseController::class,'index'])->name("paginainici");
+Route::get('/registro',[ autenticarseController::class,'registrar'])->name("registro");
+Route::get('/cita',[ CitaController::class,'pedir'])->name("pedircita");
+Route::get('/citas',[ CitaController::class,'confirmar'])->name("citaseleccionada");
+Route::get('/panel',[ panelUsuarioController::class,'index'])->name("iniciusuario");
+Route::get('/panel/mostrar',[ panelUsuarioController::class,'mostrar'])->name("mostrar");
+Route::get('/panel/modificar',[ panelUsuarioController::class,'cambiar'])->name("cambiar");
+Route::get('/dashboard',[ panelAdministrativoController::class,'index'])->name("iniciadministrativo");
+Route::get('/dashboard/disponibilidad',[ panelAdministrativoController::class,'manejarDisponibilidad'])->name("disponibilidad");
+Route::get('/dashboard/agenda',[ panelAdministrativoController::class,'manejarAgenda'])->name("agenda");
+Route::get('/dashboard/blog',[ panelAdministrativoController::class,'manejarBlog'])->name("blog");
+Route::get('/dashboard/doctores',[ panelAdministrativoController::class,'manejarDoctores'])->name("manejodoctores");
+// LOGIN
+Route::get('/inici', [autenticarseController::class, 'index'])->name('paginainici');
+Route::post('/inici', [autenticarseController::class, 'login'])->name('login.process');
 
 // HORARIO CITAS
 Route::get('/horarios/dias/{idDoctor}', [CitaController::class, 'obtenerDias']);
 Route::get('/horarios/horas/{idDoctor}/{fecha}', [CitaController::class, 'obtenerHoras']);
+
+// LOGOUT
+Route::post('/logout', [autenticarseController::class, 'logout'])->name('logout');
+
+
+//citas
+Route::get('/horarios-disponibles', [CitaController::class, 'horariosDisponibles']);
+Route::post('/reservar-ciata', [CitaController::class, 'reservar']);
+Route::get('/tratamientos-listado', [TratamientoController::class, 'listar']);
+Route::get('/doctores-listado', [DoctorController::class, 'listar']);
+
+
+//pagos
+Route::post('/payment/create', [PaymentController::class, 'createPayment']);
+Route::get('/payment', [PaymentController::class, 'index']);
+Route::get('/payment/success', [PaymentController::class, 'success']);
+
+
 

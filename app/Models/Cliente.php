@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Cliente extends Model
+class Cliente extends Authenticatable
 {
     use HasFactory;
+
     protected $table = 'cliente';
     protected $primaryKey = 'id_cliente';
     public $timestamps = false;
@@ -20,8 +21,18 @@ class Cliente extends Model
         'contrasenya',
         'metodo_autenticacion',
         'fecha_dato',
-        'fecha_carga'
+        'fecha_carga',
     ];
+
+    protected $hidden = [
+        'contrasenya',
+    ];
+
+    // Para que Auth use 'contrasenya' como password
+    public function getAuthPassword()
+    {
+        return $this->contrasenya;
+    }
 
     // Relaciones
     public function historialClinico()

@@ -24,6 +24,7 @@ class DoctorSeeder extends Seeder
                 [
                     'nombre' => 'Laura',
                     'apellidos' => 'Lopez',
+                    'email' => 'laura@example.com',
                     'especialidad' =>'Higienista',
                     'email'=>'ifasiofs@jnokfads.es',
                     'contrasenya' =>'sdfauojhojfasd',
@@ -34,6 +35,8 @@ class DoctorSeeder extends Seeder
                 [
                     'nombre' => 'Carlos',
                     'apellidos' => 'Ruiz Garcia',
+                    'email' => 'carlos@example.com',
+                    'especialidad' =>'Higienista',
                     'especialidad' =>'Dentista General',
                     'email'=>'nfhdn@jnokfads.es',
                     'contrasenya' =>'sdfauojhojfasd',
@@ -44,6 +47,8 @@ class DoctorSeeder extends Seeder
                 [
                     'nombre' => 'Cristobal',
                     'apellidos' => 'Ramon de los Santos',
+                    'email' => 'cristobal@example.com',
+                    'especialidad' =>'Higienista',
                     'especialidad' =>'Dentista general',
                     'email'=>'ifasiofs@adf.es',
                     'contrasenya' =>'adsffadfd',

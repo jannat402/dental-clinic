@@ -1,43 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Mis Citas - Dental Clinic</title>
     <link rel="stylesheet" href="{{asset('css/panelcitas.css')}}">
 </head>
 <body>
     <main>
-        <h1>Bievenido a dental clinic</a></h1>
-        <p> Aquí puede reservar cita. Para cualquier problema o para agendar cita por teléfono, llame al 666666666</p>
-        <div id="table">
+
+        <h1>Mis citas programadas</h1>
+
+        <a href="{{ route('iniciusuario') }}" class="btn-volver">← Volver al panel</a>
+
+        <p>Aquí puede ver, modificar o eliminar sus citas.</p>
+
+        <div id="tabla-container">
             <table>
-                <tr>
-                    <th>Doctor</th>
-                    <th>Tractament</th>
-                    <th>Dia i hora</th>
-                    <th>Accions</th>
-                </tr>
-                <tr>
-                    <td>Lopez</td>
-                    <td>Curetaje</td>
-                    <td>29/07/2025 16:00</td>
-                    <td>
-                        <button class="botoneliminar">Eliminar</button>
-                        <button class="botonmodificar">Modificar</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Lopez</td>
-                    <td>Curetaje</td>
-                    <td>29/07/2025 16:00</td>
-                    <td>
-                        <button class="botoneliminar">Eliminar</button>
-                        <button class="botonmodificar">Modificar</button>
-                    </td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Tratamiento</th>
+                        <th>Día y hora</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse ($citas as $cita)
+                        <tr>
+                            <td>{{ $cita->doctor->nombre ?? 'Sin asignar' }}</td>
+                            <td>{{ $cita->tratamiento->nombre ?? 'Sin asignar' }}</td>
+                            <td>{{ $cita->fecha }} {{ $cita->hora }}</td>
+                            <td>
+                                <a href="#" class="btn eliminar">Eliminar</a>
+                                <a href="#" class="btn modificar">Modificar</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="sin-citas">No tienes citas registradas.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+
             </table>
         </div>
+
     </main>
 </body>
 </html>

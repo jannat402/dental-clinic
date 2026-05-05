@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Administrativo extends Model
+class Administrativo extends Authenticatable
 {
     protected $table = 'administrativo';
     protected $primaryKey = 'id_admin';
@@ -18,8 +18,17 @@ class Administrativo extends Model
         'autenticacion_segura',
         'rol',
         'fecha_dato',
-        'fecha_carga'
+        'fecha_carga',
     ];
+
+    protected $hidden = [
+        'contrasenya',
+    ];
+
+    public function getAuthPassword()
+    {
+        return $this->contrasenya;
+    }
 
     public function citas()
     {

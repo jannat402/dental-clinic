@@ -1,5 +1,5 @@
 @extends('layouts.admin-crud')
-@section('title', 'Nova cita')
+@section('title', 'Nueva cita')
 @section('contenido')
 <h1>Crear cita (admin)</h1>
 <form action="{{ route('citas.store') }}" method="POST">
@@ -16,7 +16,7 @@
         <option value="{{ $d->id_doctor }}">{{ $d->nombre }} {{ $d->apellidos }}</option>
         @endforeach
     </select>
-    <label>Tractament:</label>
+    <label>Tratamiento:</label>
     <select name="id_tratamiento" required>
         @foreach($tratamientos as $t)
         <option value="{{ $t->id_tratamiento }}">{{ $t->nombre_tratamiento }}</option>
@@ -24,22 +24,22 @@
     </select>
     <label>Admin:</label>
     <select name="id_admin">
-        <option value="">Cap</option>
+        <option value="">Ninguno</option>
         @foreach($admins as $a)
         <option value="{{ $a->id_admin }}">{{ $a->nombre }} {{ $a->apellidos }}</option>
         @endforeach
     </select>
-    <label>Data:</label><input type="date" name="fecha" required>
-    <label>Hora inici:</label><input type="time" name="hora_inicio" required>
-    <label>Hora fi:</label><input type="time" name="hora_fin" required>
-    <label>Estat:</label>
+    <label>Fecha:</label><input type="date" name="fecha" required>
+    <label>Hora inicio:</label><input type="time" name="hora_inicio" required>
+    <label>Hora fin:</label><input type="time" name="hora_fin" required>
+    <label>Estado:</label>
     <select name="estado">
         <option value="reservada">Reservada</option>
-        <option value="pendiente_pago">Pendent de pagament</option>
+        <option value="pendiente_pago">Pendiente de pago</option>
         <option value="completada">Completada</option>
-        <option value="cancelada">Cancel·lada</option>
+        <option value="cancelada">Cancelada</option>
     </select>
-    <label>Tipus:</label>
+    <label>Tipo:</label>
     <select name="tipo_reserva">
         <option value="online">Online</option>
         <option value="presencial">Presencial</option>

@@ -2,54 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Stripe\Stripe;
-use Stripe\PaymentIntent;
-use Stripe\Exception\ApiErrorException;
+use App\Models\Cita;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
-    public function index()
+    public function index($id_cita)
     {
-        return view('payment.payment');
+        $cita = Cita::with(['tratamiento', 'cliente', 'doctor'])->findOrFail($id_cita);
+        return view('payment.payment', compact('cita'));
     }
 
-    public function createPayment(Request $request)
+    public function process($id_cita)
     {
-        try {
-            Stripe::setApiKey(config('services.stripe.secret'));
+        $cita = Cita::findOrFail($id_cita);
+        $cita->update(['estado' => 'reservada']);
 
-            $amount = $request->input('amount', 1000);
+        app(NotificationService::class)->enviarConfirmacio($cita);
+        session()->forget('pending_cita_id');
 
-            $intent = PaymentIntent::create([
-                'amount' => $amount,
-                'currency' => 'eur',
-                'automatic_payment_methods' => ['enabled' => true],
-            ]);
-
-            return response()->json([
-                'clientSecret' => $intent->client_secret,
-            ]);
-        } catch (ApiErrorException $e) {
-            return response()->json([
-                'error' => $e->getMessage(),
-            ], 400);
-        }
+        return redirect()->route('payment.success', ['id_cita' => $cita->id_cita, 'status' => 'succeeded']);
     }
 
-    public function success(Request $request)
+    public function success(Request $request, $id_cita)
     {
-        $status = $request->query('status', 'canceled');
-        $paymentIntent = $request->query('payment_intent', '');
-        $message = $request->query('message', '');
+        $cita = Cita::with(['doctor', 'tratamiento'])->find($id_cita);
 
         return view('payment.success', [
-            'status' => $status,
-            'paymentIntent' => $paymentIntent,
-            'message' => $message,
+            'status' => $request->query('status', 'canceled'),
+            'cita' => $cita,
+            'paymentIntent' => 'SIMULATED',
         ]);
     }
 }
-
-

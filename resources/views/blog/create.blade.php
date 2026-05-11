@@ -1,26 +1,26 @@
 @extends('layouts.admin-crud')
-@section('title', 'Nou article')
+@section('title', 'Nuevo artículo')
 @section('contenido')
-<h1>Nou article de blog</h1>
+<h1>Nuevo artículo de blog</h1>
 <form action="{{ route('blog.store') }}" method="POST">
     @csrf
-    <label>Títol:</label><input type="text" name="titulo" required>
-    <label>Contingut:</label><textarea name="contenido" rows="10" required></textarea>
+    <label>Título:</label><input type="text" name="titulo" required>
+    <label>Contenido:</label><textarea name="contenido" rows="10" required></textarea>
     <label>Autor:</label>
     <select name="autor_id">
-        <option value="">Selecciona...</option>
+        <option value="">Seleccionar...</option>
         @foreach($admins as $a)
         <option value="{{ $a->id_admin }}">{{ $a->nombre }} {{ $a->apellidos }}</option>
         @endforeach
     </select>
-    <label>Tractament relacionat:</label>
+    <label>Tratamiento relacionado:</label>
     <select name="id_tratamiento">
-        <option value="">Cap</option>
+        <option value="">Ninguno</option>
         @foreach($tratamientos ?? [] as $t)
         <option value="{{ $t->id_tratamiento }}">{{ $t->nombre_tratamiento }}</option>
         @endforeach
     </select>
-    <label>Enllaç a reserva de cita:</label>
+    <label>Enlace a reserva de cita:</label>
     <select name="enlace_cita">
         <option value="1">Sí</option>
         <option value="0">No</option>

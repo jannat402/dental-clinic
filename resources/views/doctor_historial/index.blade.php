@@ -1,10 +1,10 @@
 @extends('layouts.admin-crud')
-@section('title', 'Assignacions doctor-historial')
+@section('title', 'Asignaciones doctor-historial')
 @section('contenido')
-<h1>Assignacions Doctor - Historial</h1>
-<a class="btn" href="{{ route('doctor-historial.create') }}" style="margin-bottom:20px;">Nova assignació</a>
+<h1>Asignaciones Doctor - Historial</h1>
+<a class="btn" href="{{ route('doctor-historial.create') }}" style="margin-bottom:20px;">Nueva asignación</a>
 <table>
-    <tr><th>Doctor</th><th>Historial</th><th>Client</th><th>Accions</th></tr>
+    <tr><th>Doctor</th><th>Historial</th><th>Cliente</th><th>Acciones</th></tr>
     @foreach($asignaciones as $a)
     <tr>
         <td>{{ $a->doctor->nombre }} {{ $a->doctor->apellidos }}</td>

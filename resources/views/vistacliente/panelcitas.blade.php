@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Les meves cites - Dental Clinic</title>
+    <title>Mis citas - Dental Clinic</title>
     <link rel="stylesheet" href="{{asset('css/panelcitas.css')}}">
 </head>
 <body>
@@ -22,19 +22,19 @@
 
     <main>
 
-        <h1 class="titulo">Les meves cites</h1>
+        <h1 class="titulo">Mis citas</h1>
 
-        <a href="{{ route('iniciusuario') }}" class="btn-volver">← Tornar al panel</a>
+        <a href="{{ route('iniciusuario') }}" class="btn-volver">← Volver al panel</a>
 
         <div id="tabla-container" class="contenedor-glass">
             <table>
                 <thead>
                     <tr>
                         <th>Doctor</th>
-                        <th>Tractament</th>
-                        <th>Dia i hora</th>
-                        <th>Estat</th>
-                        <th>Accions</th>
+                        <th>Tratamiento</th>
+                        <th>Día y hora</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
 
@@ -48,11 +48,11 @@
                                 @if($cita->estado == 'reservada')
                                     <span style="color:#22c55e;font-weight:bold;">Confirmada</span>
                                 @elseif($cita->estado == 'pendiente_pago')
-                                    <span style="color:#eab308;font-weight:bold;">Pendent pagament</span>
+                                    <span style="color:#eab308;font-weight:bold;">Pendiente pago</span>
                                 @elseif($cita->estado == 'completada')
                                     <span style="color:#3b82f6;font-weight:bold;">Completada</span>
                                 @else
-                                    <span style="color:#ef4444;font-weight:bold;">Cancel·lada</span>
+                                    <span style="color:#ef4444;font-weight:bold;">Cancelada</span>
                                 @endif
                             </td>
                             <td class="acciones">
@@ -61,8 +61,8 @@
                                     <form action="{{ route('citas.destroy', $cita->id_cita) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn eliminar" onclick="return confirm('Segur que vols cancel·lar aquesta cita?')">
-                                            Cancel·lar
+                                        <button class="btn eliminar" onclick="return confirm('¿Seguro que quieres cancelar esta cita?')">
+                                            Cancelar
                                         </button>
                                     </form>
                                 @endif
@@ -70,7 +70,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="sin-cites">No tens cites registrades.</td>
+                            <td colspan="5" class="sin-cites">No tienes citas registradas.</td>
                         </tr>
                     @endforelse
                 </tbody>

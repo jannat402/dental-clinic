@@ -1,0 +1,185 @@
+/* Fons amb imatge de landing page */
+main {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("../images/landingpage.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Capa fosca */
+main::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 0;
+}
+
+/* Logo */
+.pago-logo {
+    position: relative;
+    z-index: 1;
+    width: 100px;
+    margin-bottom: 18px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+/* Targeta glassmorphism */
+.pago-card {
+    position: relative;
+    z-index: 1;
+    width: 90%;
+    max-width: 480px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 35px 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    text-align: center;
+    color: #f7f6f5;
+}
+
+/* Títols */
+.pago-card h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin: 0 0 10px 0;
+}
+
+.pago-card h1.exito {
+    color: #00ff9d;
+}
+
+.pago-card h1.error {
+    color: #ff6b6b;
+}
+
+/* Resum de la cita */
+.resum-pago {
+    text-align: left;
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+}
+
+.resum-pago p {
+    margin: 8px 0;
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.resum-pago .label {
+    opacity: 0.75;
+    font-weight: 600;
+}
+
+.resum-pago .value {
+    font-weight: 700;
+}
+
+/* Preu destacat */
+.preu-destacat {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #f7f6f5;
+    margin: 15px 0;
+}
+
+/* Icones */
+.icono {
+    margin: 20px 0;
+}
+
+/* Missatge d'informació */
+.msg-info {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    margin: 15px 0;
+    opacity: 0.85;
+}
+
+/* Botons */
+.btn-pago {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 14px 35px;
+    background-color: #668fab;
+    color: #f7f6f5;
+    font-weight: 800;
+    font-size: 1.05rem;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.3s;
+    width: auto;
+    min-width: 200px;
+}
+
+.btn-pago:hover {
+    background-color: #4f6f86;
+    border-color: #f7f6f5;
+    transform: translateY(-2px);
+}
+
+.btn-pago-success {
+    background-color: #22c55e;
+}
+
+.btn-pago-success:hover {
+    background-color: #16a34a;
+}
+
+/* Enllaç secundari */
+.pago-footer {
+    position: relative;
+    z-index: 1;
+    margin-top: 18px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+.pago-footer a {
+    color: #f7f6f5;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+/* ID simulat */
+.id-simulat {
+    font-size: 0.8rem;
+    opacity: 0.5;
+    margin-top: 15px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    main {
+        position: relative;
+        height: auto;
+        min-height: 100vh;
+        padding: 40px 15px;
+        justify-content: flex-start;
+    }
+    .pago-card {
+        padding: 25px 20px;
+    }
+    .pago-card h1 {
+        font-size: 1.3rem;
+    }
+}

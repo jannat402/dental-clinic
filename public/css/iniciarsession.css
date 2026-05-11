@@ -1,28 +1,65 @@
-/* Fondo general */
+/* Fondo con imagen de landing page */
 main {
     position: fixed;
     inset: 0;
     width: 100vw;
     height: 100vh;
-    background-color: #126b9d; /* azul original */
+    background-image: url("../images/landingpage.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     font-size: 20px;
     font-family: sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
-/* Títulos */
-h1 {
-    margin-top: 60px;
-    margin-bottom: 20px; /* separación extra */
+/* Capa oscura */
+main::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 0;
+}
+
+/* Logo */
+.login-logo {
+    position: relative;
+    z-index: 1;
+    width: 120px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+/* Targeta glassmorphism */
+.login-card {
+    position: relative;
+    z-index: 1;
+    width: 90%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 35px 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Títol dins la targeta */
+.login-card h1 {
+    margin: 0 0 20px 0;
     text-align: center;
     color: #f7f6f5;
-    font-size: 1.7rem;
+    font-size: 1.4rem;
     font-weight: 700;
+    line-height: 1.4;
 }
 
-h1 a {
+.login-card h1 a {
     color: inherit;
     font-weight: bold;
     text-decoration: underline;
@@ -30,30 +67,25 @@ h1 a {
 
 /* Caja de error */
 .error-box {
-    background-color: #ff4d4d;
+    background-color: rgba(255, 77, 77, 0.9);
     color: white;
     padding: 12px 20px;
     border-radius: 10px;
-    margin-top: 10px;
-    margin-bottom: 20px; /* separación del formulario */
+    margin-bottom: 20px;
     font-weight: bold;
     text-align: center;
-    width: 80%;
-    max-width: 400px;
+    font-size: 0.9rem;
 }
 
-/* Formulario */
-main form {
-    margin-top: 20px;
-    width: 80%;
-    max-width: 500px;
+/* Formulari */
+.login-card form {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* Fieldset */
-main form fieldset {
+.login-card form fieldset {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -62,44 +94,122 @@ main form fieldset {
 }
 
 /* Inputs */
-main form fieldset input {
-    font-size: 1.1em;
-    margin-top: 25px;
+.login-card form fieldset input {
+    font-size: 1rem;
+    margin-top: 18px;
     width: 100%;
     max-width: 350px;
-    background-color: #b8c9d5; /* azul claro original */
-    padding: 15px 20px;
+    background-color: #b8c9d5;
+    padding: 14px 18px;
     color: #f7f6f5;
-    border-radius: 10px;
-    border: none;
+    border-radius: 12px;
+    border: 2px solid transparent;
     outline: none;
     font-weight: 600;
+    transition: 0.3s;
+    box-sizing: border-box;
+}
+
+.login-card form fieldset input:focus {
+    border-color: #f7f6f5;
+    background-color: rgba(184, 201, 213, 0.8);
 }
 
 /* Placeholder */
-::placeholder {
+.login-card form fieldset input::placeholder {
     color: #f7f6f5;
     font-weight: 700;
+    opacity: 0.8;
 }
 
-/* Botón */
-main form fieldset input[type="submit"] {
-    background-color: #668fab; /* azul secundario */
+/* Botó */
+.login-card form fieldset input[type="submit"] {
+    background-color: #668fab;
     color: #f7f6f5;
     border-radius: 20px;
-    width: 60%;
+    width: 70%;
     max-width: 250px;
-    margin-top: 40px;
+    margin-top: 30px;
     cursor: pointer;
     transition: 0.3s;
+    font-weight: 800;
+    font-size: 1.05rem;
+    border: 2px solid transparent;
 }
 
-main form fieldset input[type="submit"]:hover {
+.login-card form fieldset input[type="submit"]:hover {
     background-color: #4f6f86;
-    border: 2px solid #f7f6f5;
+    border-color: #f7f6f5;
+    transform: translateY(-2px);
 }
 
-/* Separación del último h1 */
-main form + h1 {
-    margin-top: 40px; /* evita que quede pegado */
+/* Selector de rol */
+.rol-selector {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.rol-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.1);
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 0.85rem;
+    color: #f7f6f5;
+    border: 2px solid transparent;
+}
+
+.rol-option:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.rol-option input[type="radio"] {
+    accent-color: #f7f6f5;
+    margin: 0;
+    width: auto;
+}
+
+.rol-option:has(input:checked) {
+    background: #668fab;
+    border-color: #f7f6f5;
+}
+
+/* Enllaç sota la targeta */
+.login-footer {
+    position: relative;
+    z-index: 1;
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+}
+
+.login-footer a {
+    color: #f7f6f5;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+/* Scroll en mòbils */
+@media (max-width: 600px) {
+    main {
+        position: relative;
+        height: auto;
+        min-height: 100vh;
+        padding: 40px 15px;
+        justify-content: flex-start;
+    }
+    .login-card {
+        padding: 25px 20px;
+    }
+    .login-card form fieldset input {
+        font-size: 0.95rem;
+        padding: 12px 16px;
+    }
 }

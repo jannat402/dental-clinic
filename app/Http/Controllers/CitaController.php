@@ -121,9 +121,9 @@ class CitaController extends Controller
             app(AppointmentService::class)->alliberarBloqueig($request->clau);
         }
 
-        app(NotificationService::class)->enviarConfirmacio($cita);
+        session(['pending_cita_id' => $cita->id_cita]);
 
-        return redirect()->route('mostrar')->with('success', 'Cita creada correctament');
+        return redirect()->route('payment.page', ['id_cita' => $cita->id_cita]);
     }
 
     public function show($id)

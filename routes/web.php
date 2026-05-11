@@ -19,16 +19,12 @@ use App\Http\Controllers\PanelUsuarioController;
 use App\Http\Controllers\DoctorPanelController;
 use App\Http\Controllers\PaymentController;
 
-/* ============================
-   LANDING PAGE
-============================ */
+/* LANDING PAGE */
 Route::get('/', function () {
     return view('clinic.landingpage');
 })->name('landing');
 
-/* ============================
-   LOGIN / REGISTRO
-============================ */
+/* LOGIN / REGISTRO */
 Route::middleware('guest.custom')->group(function () {
     Route::get('/inici', [autenticarseController::class, 'index'])->name('paginainici');
     Route::post('/inici', [autenticarseController::class, 'login'])->name('login.process');
@@ -37,26 +33,20 @@ Route::middleware('guest.custom')->group(function () {
 });
 Route::post('/logout', [AutenticarseController::class, 'logout'])->name('logout');
 
-/* ============================
-   PEDIR CITA (ACCESO CLIENTE)
-============================ */
+/*  PEDIR CITA (ACCESO CLIENTE)*/
 Route::middleware('cliente')->group(function () {
     Route::get('/pedircita', [CitaController::class, 'pedir'])->name('pedircita');
     Route::post('/citaseleccionada', [CitaController::class, 'confirmar'])->name('citaseleccionada');
 });
 
-/* ============================
-   PANEL CLIENTE
-============================ */
+/* PANEL CLIENTE */
 Route::middleware('cliente')->group(function () {
     Route::get('/panel', [PanelUsuarioController::class, 'index'])->name('iniciusuario');
     Route::get('/panel/mostrar', [PanelUsuarioController::class, 'mostrar'])->name('mostrar');
     Route::get('/panel/editar/{id_cita}', [PanelUsuarioController::class, 'edit'])->name('modificar');
 });
 
-/* ============================
-   PANEL ADMINISTRATIVO
-============================ */
+/* PANEL ADMINISTRATIVO */
 Route::middleware('admin')->group(function () {
     Route::get('/dashboard', [PanelAdministrativoController::class, 'index'])->name('iniciadministrativo');
     Route::get('/dashboard/disponibilidad', [PanelAdministrativoController::class, 'manejarDisponibilidad'])->name('disponibilidad');
@@ -65,9 +55,7 @@ Route::middleware('admin')->group(function () {
     Route::get('/dashboard/doctores', [PanelAdministrativoController::class, 'manejarDoctores'])->name('manejodoctores');
 });
 
-/* ============================
-   PANEL DOCTOR
-============================ */
+/*PANEL DOCTOR */
 Route::middleware('doctor')->group(function () {
 
     Route::get('/doctor/agenda', [DoctorPanelController::class, 'agenda'])->name('doctor.agenda');
@@ -90,17 +78,13 @@ Route::middleware('doctor')->group(function () {
     Route::post('/doctor/citas/{id_cita}/cancelar', [DoctorPanelController::class, 'cancelarCita'])->name('doctor.cita.cancelar');
 });
 
-/* ============================
-   CRUDs PRINCIPALES
-============================ */
+/* CRUDs PRINCIPALES */
 Route::resource('clientes', ClienteController::class);
 Route::resource('doctores', DoctorController::class);
 Route::resource('administrativos', AdministrativoController::class);
 Route::resource('tratamientos', TratamientoController::class);
 Route::resource('historial', HistorialClinicoController::class);
-/* ============================
-   HORARIOS AJAX (abans del resource per evitar conflicte)
-============================ */
+/* HORARIOS AJAX */
 Route::get('/horarios/dias/{idDoctor}', [CitaController::class, 'obtenerDias']);
 Route::get('/horarios/horas/{idDoctor}/{fecha}', [CitaController::class, 'obtenerHoras']);
 Route::get('/horarios/tratamientos/{idDoctor}', [CitaController::class, 'obtenerTratamientos']);
@@ -111,16 +95,12 @@ Route::resource('pagos', PagoController::class);
 Route::resource('doctor-historial', DoctorHistorialController::class)->only(['index', 'create', 'store', 'destroy']);
 Route::resource('blog', BlogController::class);
 
-/* ============================
-    PAGOS
-============================ */
-Route::post('/payment/create', [PaymentController::class, 'createPayment']);
-Route::get('/payment', [PaymentController::class, 'index']);
-Route::get('/payment/success', [PaymentController::class, 'success']);
+/* PAGOS  */
+Route::get('/payment/{id_cita}', [PaymentController::class, 'index'])->name('payment.page');
+Route::post('/payment/{id_cita}/process', [PaymentController::class, 'process'])->name('payment.process');
+Route::get('/payment/{id_cita}/success', [PaymentController::class, 'success'])->name('payment.success');
 
-/* ============================
-   2FA
-============================ */
+/* 2FA */
 Route::middleware('guest.custom')->group(function () {
     Route::get('/2fa/verify', [App\Http\Controllers\TwoFactorController::class, 'index'])->name('2fa.form');
     Route::post('/2fa/enviar', [App\Http\Controllers\TwoFactorController::class, 'enviarCodi'])->name('2fa.enviar');

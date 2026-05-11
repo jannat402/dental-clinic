@@ -13,14 +13,14 @@ class CitaSeeder extends Seeder
 {
     public function run(): void
     {
-        // ✔️ Generamos 200 citas
+        // 200 citas
         for ($i = 0; $i < 20; $i++) {
 
             $doctor = Doctor::inRandomOrder()->first();
             $cliente = Cliente::inRandomOrder()->first();
             $tratamiento = Tratamiento::inRandomOrder()->first();
 
-            // ✔️ GENERACIÓN DE FECHA Y HORAS
+            //GENERACIÓN DE FECHA Y HORAS
             do {
                 $fecha = fake()->dateTimeBetween('now', '+10 days')->format('Y-m-d');
 
@@ -28,19 +28,17 @@ class CitaSeeder extends Seeder
                 $duracion = $tratamiento->duracion_minutos;
                 $horaFin = (clone $horaInicio)->modify("+$duracion minutes");
 
-            // ❌ ANTES: usabas una función que NO detectaba todos los solapamientos
-            // ✔️ AHORA: usamos la fórmula universal correcta
+            // usamos la fórmula universal correcta
             } while (!$this->sePuedeReservar($fecha, $horaInicio, $horaFin, $doctor));
 
-            // ❌ ANTES: estabas guardando objetos enteros
-            // ✔️ AHORA: guardamos solo IDs
+            //guardamos solo IDs
             Cita::create([
                 'id_cliente'      => $cliente->id_cliente,
                 'id_doctor'       => $doctor->id_doctor,
                 'id_tratamiento'  => $tratamiento->id_tratamiento,
                 'id_admin'        => null,
 
-                // ✔️ Guardamos horas como strings válidos
+                //Guardamos horas como strings válidos
                 'fecha'           => $fecha,
                 'hora_inicio'     => $horaInicio->format('H:i:s'),
                 'hora_fin'        => $horaFin->format('H:i:s'),
@@ -55,9 +53,7 @@ class CitaSeeder extends Seeder
 
     private function sePuedeReservar($fecha, $horaInicio, $horaFin, $doctor): bool
     {
-        // ❌ ANTES: comparación incorrecta y orWhere sin agrupar
-        // ✔️ AHORA: fórmula universal de solapamiento
-        //
+        // fórmula universal de solapamientO
         // Dos intervalos se solapan si:
         // inicio_existente < fin_nueva  AND  fin_existente > inicio_nueva
 

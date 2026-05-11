@@ -1,7 +1,7 @@
 @extends('layouts.admin-crud')
-@section('title', 'Nou horari')
+@section('title', 'Nuevo horario')
 @section('contenido')
-<h1>Nou horari</h1>
+<h1>Nuevo horario</h1>
 <form action="{{ route('horarios.store') }}" method="POST">
     @csrf
     <label>Doctor:</label>
@@ -11,29 +11,29 @@
         @endforeach
     </select>
 
-    <label>Data:</label><input type="date" name="fecha" required>
+    <label>Fecha:</label><input type="date" name="fecha" required>
 
-    <label>Hora inici:</label><input type="time" name="hora_inicio" required>
+    <label>Hora inicio:</label><input type="time" name="hora_inicio" required>
 
-    <label>Hora fi:</label><input type="time" name="hora_fin" required>
+    <label>Hora fin:</label><input type="time" name="hora_fin" required>
 
     <label>Disponible:</label>
     <select name="disponible" id="disponible" onchange="toggleBloqueig()">
         <option value="1">Sí</option>
-        <option value="0">No (bloquejat)</option>
+        <option value="0">No (bloqueado)</option>
     </select>
 
     <div id="bloqueig-fields" style="display:none;">
-        <label>Tipus de bloqueig:</label>
+        <label>Tipo de bloqueo:</label>
         <select name="tipus_bloqueig">
-            <option value="">Selecciona un motiu</option>
-            <option value="vacaciones">Vacances</option>
-            <option value="tancament">Tancament</option>
-            <option value="mantenimiento">Manteniment</option>
+            <option value="">Selecciona un motivo</option>
+            <option value="vacaciones">Vacaciones</option>
+            <option value="tancament">Cierre</option>
+            <option value="mantenimiento">Mantenimiento</option>
         </select>
 
-        <label>Motiu (descripció):</label>
-        <input type="text" name="motivo_bloqueo" placeholder="Descripció del bloqueig">
+        <label>Motivo (descripción):</label>
+        <input type="text" name="motivo_bloqueo" placeholder="Descripción del bloqueo">
     </div>
 
     <button type="submit">Crear</button>

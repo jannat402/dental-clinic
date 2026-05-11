@@ -1,7 +1,7 @@
 @extends('layouts.admin-crud')
-@section('title', 'Editar pagament')
+@section('title', 'Editar pago')
 @section('contenido')
-<h1>Editar pagament</h1>
+<h1>Editar pago</h1>
 <form action="{{ route('pagos.update', $pago->id_pago) }}" method="POST">
     @csrf @method('PUT')
     <label>Cita:</label>
@@ -11,18 +11,18 @@
         @endforeach
     </select>
     <label>Import (€):</label><input type="number" name="monto" step="0.01" value="{{ $pago->monto }}" required>
-    <label>Mètode:</label>
+    <label>Método:</label>
     <select name="metodo_pago">
-        <option value="tarjeta" {{ $pago->metodo_pago == 'tarjeta' ? 'selected' : '' }}>Targeta</option>
-        <option value="efectivo" {{ $pago->metodo_pago == 'efectivo' ? 'selected' : '' }}>Efectiu</option>
-        <option value="transferencia" {{ $pago->metodo_pago == 'transferencia' ? 'selected' : '' }}>Transferència</option>
+        <option value="tarjeta" {{ $pago->metodo_pago == 'tarjeta' ? 'selected' : '' }}>Tarjeta</option>
+        <option value="efectivo" {{ $pago->metodo_pago == 'efectivo' ? 'selected' : '' }}>Efectivo</option>
+        <option value="transferencia" {{ $pago->metodo_pago == 'transferencia' ? 'selected' : '' }}>Transferencia</option>
     </select>
-    <label>Estat:</label>
+    <label>Estado:</label>
     <select name="estado_pago">
-        <option value="pendiente" {{ $pago->estado_pago == 'pendiente' ? 'selected' : '' }}>Pendent</option>
-        <option value="pagado" {{ $pago->estado_pago == 'pagado' ? 'selected' : '' }}>Pagat</option>
-        <option value="fallido" {{ $pago->estado_pago == 'fallido' ? 'selected' : '' }}>Fallit</option>
+        <option value="pendiente" {{ $pago->estado_pago == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
+        <option value="pagado" {{ $pago->estado_pago == 'pagado' ? 'selected' : '' }}>Pagado</option>
+        <option value="fallido" {{ $pago->estado_pago == 'fallido' ? 'selected' : '' }}>Fallido</option>
     </select>
-    <button type="submit">Actualitzar</button>
+    <button type="submit">Actualizar</button>
 </form>
 @endsection

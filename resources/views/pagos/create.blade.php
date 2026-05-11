@@ -1,7 +1,7 @@
 @extends('layouts.admin-crud')
-@section('title', 'Nou pagament')
+@section('title', 'Nuevo pago')
 @section('contenido')
-<h1>Nou pagament</h1>
+<h1>Nuevo pago</h1>
 <form action="{{ route('pagos.store') }}" method="POST">
     @csrf
     <label>Cita:</label>
@@ -11,16 +11,16 @@
         @endforeach
     </select>
     <label>Import (€):</label><input type="number" name="monto" step="0.01" required>
-    <label>Mètode:</label>
+    <label>Método:</label>
     <select name="metodo_pago">
-        <option value="tarjeta">Targeta</option>
-        <option value="efectivo">Efectiu</option>
-        <option value="transferencia">Transferència</option>
+        <option value="tarjeta">Tarjeta</option>
+        <option value="efectivo">Efectivo</option>
+        <option value="transferencia">Transferencia</option>
     </select>
-    <label>Estat:</label>
+    <label>Estado:</label>
     <select name="estado_pago">
-        <option value="pendiente">Pendent</option>
-        <option value="pagado">Pagat</option>
+        <option value="pendiente">Pendiente</option>
+        <option value="pagado">Pagado</option>
     </select>
     <button type="submit">Crear</button>
 </form>

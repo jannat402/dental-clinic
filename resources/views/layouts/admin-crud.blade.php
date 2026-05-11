@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Admin - Dental Clinic')</title>
@@ -7,19 +7,19 @@
 </head>
 <body>
 <header>
-    <h2>Panel d'Administració</h2>
+    <h2>Panel de Administración</h2>
     <nav>
         <a href="{{ route('iniciadministrativo') }}">Dashboard</a>
-        <a href="{{ route('clientes.index') }}">Clients</a>
-        <a href="{{ route('doctores.index') }}">Doctors</a>
-        <a href="{{ route('administrativos.index') }}">Administradors</a>
-        <a href="{{ route('tratamientos.index') }}">Tractaments</a>
-        <a href="{{ route('horarios.index') }}">Horaris</a>
-        <a href="{{ route('pagos.index') }}">Pagaments</a>
+        <a href="{{ route('clientes.index') }}">Clientes</a>
+        <a href="{{ route('doctores.index') }}">Doctores</a>
+        <a href="{{ route('administrativos.index') }}">Administradores</a>
+        <a href="{{ route('tratamientos.index') }}">Tratamientos</a>
+        <a href="{{ route('horarios.index') }}">Horarios</a>
+        <a href="{{ route('pagos.index') }}">Pagos</a>
         <a href="{{ route('blog.index') }}">Blog</a>
         <form action="{{ route('logout') }}" method="POST" style="display:inline;">
             @csrf
-            <button type="submit">Tancar sessió</button>
+            <button type="submit">Cerrar sesión</button>
         </form>
     </nav>
 </header>

@@ -1,18 +1,18 @@
 @extends('layouts.admin-crud')
-@section('title', 'Horaris')
+@section('title', 'Horarios')
 @section('contenido')
 
 <div class="cal-header">
-    <h1>Gestió d'Horaris</h1>
+    <h1>Gestión de Horarios</h1>
     <div class="cal-nav">
-        <a class="btn" href="{{ route('horarios.create') }}">Nou horari</a>
+        <a class="btn" href="{{ route('horarios.create') }}">Nuevo horario</a>
     </div>
 </div>
 
 <div class="cal-controls">
     <form method="GET" action="{{ route('horarios.index') }}" style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;">
         <select name="doctor" onchange="this.form.submit()">
-            <option value="">Tots els doctors</option>
+            <option value="">Todos los doctores</option>
             @foreach($doctores as $d)
                 <option value="{{ $d->id_doctor }}" {{ $selectedDoctor == $d->id_doctor ? 'selected' : '' }}>
                     {{ $d->nombre }} {{ $d->apellidos }}
@@ -20,21 +20,21 @@
             @endforeach
         </select>
 
-        <a class="btn" href="{{ route('horarios.index', ['week' => $prevWeek, 'doctor' => $selectedDoctor]) }}">← Setmana anterior</a>
+        <a class="btn" href="{{ route('horarios.index', ['week' => $prevWeek, 'doctor' => $selectedDoctor]) }}">← Semana anterior</a>
         <span style="font-weight:700;color:#1565c0;">
-            {{ \Carbon\Carbon::parse($selectedWeek)->locale('ca')->startOfWeek()->format('d M') }} -
-            {{ \Carbon\Carbon::parse($selectedWeek)->locale('ca')->endOfWeek()->format('d M Y') }}
+            {{ \Carbon\Carbon::parse($selectedWeek)->locale('es')->startOfWeek()->format('d M') }} -
+            {{ \Carbon\Carbon::parse($selectedWeek)->locale('es')->endOfWeek()->format('d M Y') }}
         </span>
-        <a class="btn" href="{{ route('horarios.index', ['week' => $nextWeek, 'doctor' => $selectedDoctor]) }}">Setmana següent →</a>
+        <a class="btn" href="{{ route('horarios.index', ['week' => $nextWeek, 'doctor' => $selectedDoctor]) }}">Semana siguiente →</a>
     </form>
 </div>
 
 <div class="cal-legend">
     <div class="legend-item"><div class="legend-color available"></div> Disponible</div>
-    <div class="legend-item"><div class="legend-color blocked"></div> Bloquejat</div>
-    <div class="legend-item"><div class="legend-color blocked-vacaciones"></div> Vacances</div>
-    <div class="legend-item"><div class="legend-color blocked-tancament"></div> Tancament</div>
-    <div class="legend-item"><div class="legend-color blocked-mantenimiento"></div> Manteniment</div>
+    <div class="legend-item"><div class="legend-color blocked"></div> Bloqueado</div>
+    <div class="legend-item"><div class="legend-color blocked-vacaciones"></div> Vacaciones</div>
+    <div class="legend-item"><div class="legend-color blocked-tancament"></div> Cierre</div>
+    <div class="legend-item"><div class="legend-color blocked-mantenimiento"></div> Mantenimiento</div>
 </div>
 
 @if(count($doctores) > 0)
@@ -72,9 +72,9 @@
                         @if($slot)
                             @php
                                 $blockClass = 'blocked';
-                                $blockLabel = $slot->motivo_bloqueo ?: 'Bloquejat';
+                                $blockLabel = $slot->motivo_bloqueo ?: 'Bloqueado';
                                 if (!$slot->disponible && $slot->tipus_bloqueig) {
-                                    $map = ['vacaciones' => 'Vacances', 'tancament' => 'Tancament', 'mantenimiento' => 'Manteniment'];
+                                    $map = ['vacaciones' => 'Vacaciones', 'tancament' => 'Cierre', 'mantenimiento' => 'Mantenimiento'];
                                     $blockClass = 'blocked-' . $slot->tipus_bloqueig;
                                     $blockLabel = $map[$slot->tipus_bloqueig] ?? $blockLabel;
                                 }
@@ -95,18 +95,18 @@
     @endforeach
 @else
     <div class="empty-state">
-        <h3>No hi ha horaris</h3>
-        <p>Crea un nou horari per començar.</p>
-        <a class="btn" href="{{ route('horarios.create') }}">Crear horari</a>
+        <h3>No hay horarios</h3>
+        <p>Crea un nuevo horario para comenzar.</p>
+        <a class="btn" href="{{ route('horarios.create') }}">Crear horario</a>
     </div>
 @endif
 
 <hr style="margin:40px 0;">
 
-<h2>Tots els horaris</h2>
+<h2>Todos los horarios</h2>
 <table class="schedule-table">
     <tr>
-        <th>Doctor</th><th>Data</th><th>Inici</th><th>Fi</th><th>Estat</th><th>Tipus</th><th>Motiu</th><th>Accions</th>
+        <th>Doctor</th><th>Fecha</th><th>Inicio</th><th>Fin</th><th>Estado</th><th>Tipo</th><th>Motivo</th><th>Acciones</th>
     </tr>
     @forelse($horarios as $h)
     <tr>
@@ -116,12 +116,12 @@
         <td>{{ substr($h->hora_fin, 0, 5) }}</td>
         <td>
             <span class="badge {{ $h->disponible ? 'badge-available' : 'badge-blocked' }}">
-                {{ $h->disponible ? 'Disponible' : 'Bloquejat' }}
+                {{ $h->disponible ? 'Disponible' : 'Bloqueado' }}
             </span>
         </td>
         <td class="tipus-col">
             @if(!$h->disponible && $h->tipus_bloqueig)
-                @php $map = ['vacaciones' => 'Vacances', 'tancament' => 'Tancament', 'mantenimiento' => 'Manteniment']; @endphp
+                @php $map = ['vacaciones' => 'Vacaciones', 'tancament' => 'Cierre', 'mantenimiento' => 'Mantenimiento']; @endphp
                 <span class="badge badge-{{ $h->tipus_bloqueig }}">{{ $map[$h->tipus_bloqueig] ?? $h->tipus_bloqueig }}</span>
             @else
                 —
@@ -129,12 +129,12 @@
         </td>
         <td>{{ $h->motivo_bloqueo ?? '—' }}</td>
         <td>
-            <a class="btn" href="{{ route('horarios.show', $h->id_horario) }}">Veure</a>
+            <a class="btn" href="{{ route('horarios.show', $h->id_horario) }}">Ver</a>
             <a class="btn" href="{{ route('horarios.edit', $h->id_horario) }}">Editar</a>
         </td>
     </tr>
     @empty
-    <tr><td colspan="8" style="text-align:center;padding:30px;">No hi ha horaris</td></tr>
+    <tr><td colspan="8" style="text-align:center;padding:30px;">No hay horarios</td></tr>
     @endforelse
 </table>
 

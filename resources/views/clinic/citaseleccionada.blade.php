@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,7 @@
 </head>
 <body>
     <main>
-        <h1>Confirma la teva cita</h1>
+        <h1>Confirma tu cita</h1>
 
         @php
             $doctor = \App\Models\Doctor::find($id_doctor);
@@ -21,7 +21,7 @@
                 <span class="resum-value">Dr. {{ $doctor->nombre ?? '' }} {{ $doctor->apellidos ?? '' }}</span>
             </div>
             <div class="resum-item">
-                <span class="resum-label">Tractament</span>
+                <span class="resum-label">Tratamiento</span>
                 <span class="resum-value">{{ $tractament->nombre_tratamiento ?? '' }}</span>
             </div>
             <div class="resum-item">
@@ -33,12 +33,12 @@
                 <span class="resum-value">{{ substr($hora_inicio, 0, 5) }} - {{ substr($hora_fin, 0, 5) }}</span>
             </div>
             <div class="resum-item">
-                <span class="resum-label">Preu</span>
+                <span class="resum-label">Precio</span>
                 <span class="resum-value">{{ $tractament->precio ?? '0' }}€</span>
             </div>
         </div>
 
-        <p style="text-align:center;margin-bottom:25px;">Revisa les dades abans de confirmar.</p>
+        <p style="text-align:center;margin-bottom:25px;">Revisa los datos antes de confirmar.</p>
 
         <form action="{{ route('citas.store') }}" method="POST" style="text-align:center;">
             @csrf
@@ -57,7 +57,7 @@
         </form>
 
         <div style="text-align:center;margin-top:15px;">
-            <a href="{{ route('pedircita') }}" style="color:rgba(255,255,255,0.7);">Tornar enrere</a>
+            <a href="{{ route('pedircita') }}" style="color:rgba(255,255,255,0.7);">Volver atrás</a>
         </div>
     </main>
 </body>

@@ -112,7 +112,7 @@ class CitaController extends Controller
         ]);
 
         if (!app(AppointmentService::class)->validarAntelacio($request->fecha)) {
-            return back()->withErrors(['fecha' => 'Les cites s\'han de reservar amb almenys 24 hores d\'antelació.']);
+            return back()->withErrors(['fecha' => 'Las citas se deben reservar con al menos 24 horas de antelación.']);
         }
 
         $cita = Cita::create($request->except('clau'));
@@ -137,11 +137,11 @@ class CitaController extends Controller
         $cita = Cita::findOrFail($id_cita);
 
         if ($cita->id_cliente != session('cliente_id')) {
-            abort(403, 'No tens permís per modificar aquesta cita.');
+            abort(403, 'No tienes permiso para modificar esta cita.');
         }
 
         if (!app(AppointmentService::class)->validarModificacio($cita->fecha)) {
-            return back()->withErrors(['error' => 'Només es poden modificar cites amb 48 hores d\'antelació.']);
+            return back()->withErrors(['error' => 'Solo se pueden modificar citas con 48 horas de antelación.']);
         }
 
         return view('vistacliente.editar', [
@@ -164,7 +164,7 @@ class CitaController extends Controller
         ]);
 
         if (!app(AppointmentService::class)->validarModificacio($request->fecha)) {
-            return back()->withErrors(['error' => 'Només es poden modificar cites amb 48 hores d\'antelació.']);
+            return back()->withErrors(['error' => 'Solo se pueden modificar citas con 48 horas de antelación.']);
         }
 
         $tractament = Tratamiento::findOrFail($request->id_tratamiento);
@@ -180,7 +180,7 @@ class CitaController extends Controller
 
         app(NotificationService::class)->enviarModificacio($cita);
 
-        return redirect()->route('mostrar')->with('success', 'Cita actualitzada correctament');
+        return redirect()->route('mostrar')->with('success', 'Cita actualizada correctamente');
     }
 
     public function destroy($id)
@@ -188,18 +188,18 @@ class CitaController extends Controller
         $cita = Cita::findOrFail($id);
 
         if ($cita->id_cliente != session('cliente_id')) {
-            abort(403, 'No tens permís per cancel·lar aquesta cita.');
+            abort(403, 'No tienes permiso para cancelar esta cita.');
         }
 
         if (!app(AppointmentService::class)->validarModificacio($cita->fecha)) {
-            return back()->withErrors(['error' => 'Només es poden cancel·lar cites amb 48 hores d\'antelació.']);
+            return back()->withErrors(['error' => 'Solo se pueden cancelar citas con 48 horas de antelación.']);
         }
 
         $cita->update(['estado' => 'cancelada']);
 
         app(NotificationService::class)->enviarCancelacio($cita);
 
-        return redirect()->route('mostrar')->with('success', 'Cita cancel·lada correctament.');
+        return redirect()->route('mostrar')->with('success', 'Cita cancelada correctamente.');
     }
 
     // AJAX: retorna els dies disponibles per a un doctor

@@ -14,6 +14,14 @@
 
     <a href="{{ route('mostrar') }}" class="btn-volver">← Volver</a>
 
+    @if(session('success'))
+        <div class="alerta-exito">{{ session('success') }}</div>
+    @endif
+
+    @if($errors->any())
+        <div class="alerta-error">{{ $errors->first() }}</div>
+    @endif
+
     <div class="card">
 
         <form action="{{ route('citas.update', $cita->id_cita) }}" method="POST">

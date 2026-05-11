@@ -36,7 +36,7 @@ class PanelUsuarioController extends Controller
         $cita = Cita::findOrFail($id_cita);
 
         if ($cita->id_cliente != session('cliente_id')) {
-            abort(403, 'No tens permís per modificar aquesta cita.');
+            abort(403, 'No tienes permiso para modificar esta cita.');
         }
 
         return view('vistacliente.editar', [

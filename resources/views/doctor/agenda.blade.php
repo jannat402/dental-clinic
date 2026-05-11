@@ -20,9 +20,9 @@
     @foreach($citas as $cita)
     <tr>
         <td>{{ $cita->fecha }}</td>
-        <td>{{ $cita->hora }}</td>
+        <td>{{ $cita->hora_inicio }}</td>
         <td>{{ $cita->cliente->nombre }} {{ $cita->cliente->apellidos }}</td>
-        <td>{{ $cita->tratamiento->nombre }}</td>
+        <td>{{ $cita->tratamiento->nombre_tratamiento }}</td>
         <td>
             <a class="btn" href="{{ route('doctor.cita.editar', $cita->id_cita) }}">Modificar</a>
             <a class="btn btn-danger" href="{{ route('doctor.cita.cancelar', $cita->id_cita) }}">Cancelar</a>

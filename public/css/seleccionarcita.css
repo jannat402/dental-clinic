@@ -1,216 +1,204 @@
 main {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #126b9d;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #126b9d 0%, #0a3c62 100%);
     color: #f7f6f5;
-    overflow: visible;
-}
-
-main form {
-    margin-top: 20px;
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    gap: 10px;
-}
-
-main form fieldset {
-    flex-basis: 45%;
+    font-family: sans-serif;
     display: flex;
     flex-direction: column;
-    border-width: 0;
-}
-
-main form fieldset input,
-main form fieldset select {
-    font-size: 16px;
-    margin-top: 30px;
-    width: 95%;
-    background-color: #b8c9d5;
-    padding: 10px 10px 10px 20px;
-    color: #f7f6f5;
-    border-radius: 10px;
-    border: none;
-}
-
-main form fieldset input::placeholder {
-    color: #f7f6f5;
-    font-weight: 700;
-}
-
-main form fieldset input[type="submit"] {
-    background-color: #668fab;
-    align-self: center;
-    cursor: pointer;
+    align-items: center;
+    padding: 40px 20px;
 }
 
 h1 {
-    margin-top: 30px;
-    text-align: center;
-    font-size: 1.5rem;
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    margin-bottom: 5px;
 }
 
-table {
-    display: table;
+p {
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+main form {
     width: 100%;
-    padding: 10px;
-    color: #f7f6f5;
+    max-width: 900px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+}
+
+main form fieldset {
+    flex: 1;
+    min-width: 300px;
+    border: none;
+    background: rgba(255,255,255,0.1);
+    padding: 25px;
+    border-radius: 15px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+main form fieldset h2 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+/* Selectors */
+main form fieldset select {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 16px;
     border-radius: 10px;
-    text-shadow: 10px 10px 10px rgb(0, 0, 0);
-    background-color: #b8c9d5;
-    table-layout: fixed;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    color: #0a3c62;
+    font-weight: 600;
+    margin-bottom: 15px;
+    cursor: pointer;
+    appearance: auto;
 }
 
-table tr td,
-table tr th {
-    padding: 5px 3px;
-    font-size: 14px;
-    text-align: center;
-    word-break: keep-all;
+main form fieldset select:focus {
+    outline: 3px solid #668fab;
 }
 
-table tr td:nth-of-type(6),
-table tr td:nth-of-type(7) {
-    color: #298a97;
+main form fieldset label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
 }
 
-table tr td:hover {
-    color: #972969;
-}
-
-.festivo,
-.festivo:hover {
-    color: red;
-}
-
-#horas {
-    display: none;
-}
-
-#listadohoras {
+/* Calendario grid */
+.calendario-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
+    gap: 6px;
+    margin-top: 10px;
 }
 
-.contenedorhora {
-    background-color: #b8c9d5;
-    border: solid black 0.5px;
-    width: 100%;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.dia-placeholder {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 30px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+.dia {
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 12px 6px;
+    text-align: center;
     cursor: pointer;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: 0.3s;
+    border: 2px solid transparent;
 }
 
-.contenedorhora.disponible:hover {
-    background-color: #668fab;
+.dia:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
 }
 
-.nodisponible {
-    opacity: 0.6;
+.dia.actiu {
+    background: #668fab;
+    border-color: #f7f6f5;
+    transform: translateY(-2px);
+}
+
+.dia.passat {
+    opacity: 0.4;
     cursor: not-allowed;
 }
 
+.dia .dia-nom {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 400;
+    opacity: 0.8;
+    margin-bottom: 4px;
+}
+
+/* Horas grid */
+.horas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.hora {
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: 0.3s;
+    border: 2px solid transparent;
+}
+
+.hora:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+}
+
+.hora.seleccionada {
+    background: #668fab;
+    border-color: #f7f6f5;
+}
+
+.hora.no-disponible {
+    opacity: 0.35;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+.hora.no-disponible:hover {
+    background: rgba(255,255,255,0.15);
+    transform: none;
+}
+
+/* Boton reservar */
 #botonReservar {
     display: flex;
     justify-content: center;
+    margin-top: 20px;
 }
 
 #botonReservar input[type="submit"] {
-    background-color: #668fab;
-    color: #f7f6f5;
+    background: #f7f6f5;
+    color: #0a3c62;
     border: none;
-    border-radius: 20px;
-    padding: 10px 30px;
-    font-size: 16px;
+    border-radius: 12px;
+    padding: 14px 40px;
+    font-size: 1.1rem;
+    font-weight: 900;
     cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+#botonReservar input[type="submit"]:hover {
+    background: #668fab;
+    color: #f7f6f5;
+    transform: translateY(-3px);
 }
 
 @media (max-width: 768px) {
-    main {
-        font-size: 14px;
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
-
-    h1 {
-        margin-top: 15px;
-        font-size: 1.2rem;
-    }
-
-    main form {
-        flex-direction: column;
-        align-items: center;
-        margin-top: 10px;
-    }
-
-    main form fieldset {
-        flex-basis: auto;
-        width: 90%;
-        margin-bottom: 15px;
-    }
-
-    main form fieldset input,
-    main form fieldset select {
-        width: 100%;
-        font-size: 14px;
-        padding: 8px 10px;
-        margin-top: 15px;
-    }
-
-    table {
-        padding: 5px;
-        font-size: 10px;
-    }
-
-    table tr td,
-    table tr th {
-        padding: 4px 2px;
-        font-size: 10px;
-    }
-
-    #listadohoras {
-        gap: 4px;
-    }
-
-    .contenedorhora {
-        height: 25px;
-    }
-
-    main form fieldset p {
-        font-size: 12px;
-        margin: 10px 0;
-    }
-
-    main form fieldset input[type="submit"] {
-        padding: 8px 15px;
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 480px) {
-    table tr td,
-    table tr th {
-        padding: 3px 1px;
-        font-size: 9px;
-    }
-
-    .contenedorhora {
-        height: 22px;
-    }
-
-    h1 {
-        font-size: 1rem;
-        margin-top: 10px;
-    }
-
-    main form fieldset p {
-        font-size: 10px;
-    }
+    main form fieldset { min-width: 100%; }
+    h1 { font-size: 1.6rem; }
+    .calendario-grid { gap: 4px; }
+    .dia { padding: 8px 4px; font-size: 0.85rem; }
+    .horas-grid { grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); }
+    .hora { padding: 10px 6px; font-size: 0.8rem; }
 }

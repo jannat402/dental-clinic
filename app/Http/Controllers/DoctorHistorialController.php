@@ -11,7 +11,7 @@ class DoctorHistorialController extends Controller
 {
     public function index()
     {
-        $asignaciones = DoctorHistorial::with(['doctor', 'historial'])->get();
+        $asignaciones = DoctorHistorial::with(['doctor', 'historial.cliente'])->get();
         return view('doctor_historial.index', compact('asignaciones'));
     }
 

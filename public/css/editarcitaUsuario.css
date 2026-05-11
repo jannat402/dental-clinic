@@ -1,0 +1,94 @@
+/* Fondo general */
+main {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #126b9d 0%, #0a3c62 100%);
+    font-family: sans-serif;
+    color: #f7f6f5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* Título */
+h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+}
+
+/* Botón volver */
+.btn-volver {
+    display: inline-block;
+    margin-bottom: 25px;
+    padding: 10px 20px;
+    background-color: #668fab;
+    color: #0a3c62;
+    font-weight: 900;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+.btn-volver:hover {
+    background-color: #f7f6f5;
+    color: #668fab;
+    transform: translateY(-3px);
+}
+
+/* Tarjeta glass */
+.card {
+    width: 90%;
+    max-width: 550px;
+    background: rgba(255,255,255,0.15);
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+/* Campos */
+.campo {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+input, select {
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background-color: rgba(255,255,255,0.85);
+    font-size: 1rem;
+    color: #0a3c62;
+    font-weight: 600;
+}
+
+/* Botón guardar */
+.btn-guardar {
+    width: 100%;
+    padding: 15px;
+    background-color: #f7f6f5;
+    color: #0a3c62;
+    font-weight: 900;
+    border-radius: 12px;
+    border: 2px solid #668fab;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+.btn-guardar:hover {
+    background-color: #668fab;
+    color: #f7f6f5;
+    transform: translateY(-3px);
+}

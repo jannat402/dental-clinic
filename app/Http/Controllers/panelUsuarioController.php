@@ -5,38 +5,44 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Cita;
+use App\Models\Doctor;
+use App\Models\Tratamiento;
 
-class panelUsuarioController extends Controller
+class PanelUsuarioController extends Controller
 {
-    public function __construct()
-    {
-        if (!session()->has('cliente_id')) {
-            return redirect()->route('paginainici')->send();
-        }
-    }
-
     public function index()
     {
+        if (!session()->has('cliente_id')) {
+            return redirect()->route('paginainici');
+        }
         return view("vistacliente.panelusuario");
     }
 
     public function mostrar()
     {
-        // ID del cliente logueado
         $idCliente = session('cliente_id');
 
-        // Obtener todas las citas del cliente (si no hay, devuelve colección vacía)
-        $citas = Cita::where('id_cliente', $idCliente)->get();
+        $citas = Cita::where('id_cliente', $idCliente)
+            ->with(['doctor', 'tratamiento'])
+            ->orderBy('fecha', 'asc')
+            ->orderBy('hora_inicio', 'asc')
+            ->get();
 
         return view("vistacliente.panelcitas", compact('citas'));
     }
 
-    public function cambiar()
+    public function edit($id_cita)
     {
-        // Puedes usar la misma lógica si también necesitas citas aquí
-        $idCliente = session('cliente_id');
-        $citas = Cita::where('id_cliente', $idCliente)->get();
+        $cita = Cita::findOrFail($id_cita);
 
-        return view("vistacliente.panelcitas", compact('citas'));
+        if ($cita->id_cliente != session('cliente_id')) {
+            abort(403, 'No tens permís per modificar aquesta cita.');
+        }
+
+        return view('vistacliente.editar', [
+            'cita' => $cita,
+            'doctores' => Doctor::all(),
+            'tratamientos' => Tratamiento::all()
+        ]);
     }
 }

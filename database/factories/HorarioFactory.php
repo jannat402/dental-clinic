@@ -64,8 +64,8 @@ class HorarioFactory extends Factory
             'hora_inicio' => $horaInicio, 
             'hora_fin' => $horaFin, 
             'disponible' => $disponible, 
-        // 80% disponible 
-            'motivo_bloqueo' => $disponible ? 'disponible para trabajar' : $this->faker->sentence(),
+            'motivo_bloqueo' => $disponible ? null : ($this->faker->optional(0.5)->sentence()),
+            'tipus_bloqueig' => $disponible ? null : $this->faker->randomElement(['vacaciones', 'tancament', 'mantenimiento', null]),
             'fecha_dato' => $this->faker->optional()->date(), 
             'fecha_carga' => now(), ];
     }

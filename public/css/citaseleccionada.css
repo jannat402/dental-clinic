@@ -1,100 +1,68 @@
-main{
-    position: fixed;
-    left: 0px;
-    top: 0px;
-    width: 100vw;
-    height: 100vh;
-    background-color: #126b9d;
-    font-size: 20px;
+main {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #126b9d 0%, #0a3c62 100%);
     font-family: sans-serif;
     color: #f7f6f5;
-}
-main form{
-    margin-top: 150px;
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content:space-around ;
-}
-main form fieldset{
-    flex-basis: 30vw;
     display: flex;
     flex-direction: column;
-    border-width: 0px;
-}
-main form fieldset input, main form fieldset select{
-    font-size: large;
-    margin-top: 30px;
-    min-width: 400px;
-    background-color: #b8c9d5;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 50px;
-    color: #f7f6f5;
-    border-radius: 10px;
+    align-items: center;
+    padding: 60px 20px;
 }
 
-main form fieldset input[type="submit"]{
-    background-color: #668fab;
-    color: #f7f6f5;
-    border-radius:20px ;
-    align-self:center;
+h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    margin-bottom: 30px;
 }
-main form fieldset input[type="button"]{
-    background-color: rgb(5, 174, 180);
+
+.resum {
+    width: 100%;
+    max-width: 500px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 15px;
+    padding: 25px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    margin-bottom: 25px;
 }
-::placeholder{
-    color: #f7f6f5;
+
+.resum-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.resum-item:last-child {
+    border-bottom: none;
+}
+
+.resum-label {
     font-weight: 700;
+    opacity: 0.8;
 }
-h1{
-    margin-top: 100px;
-    text-align: center;
+
+.resum-value {
+    font-weight: 700;
+    text-align: right;
+}
+
+.btn-confirmar {
+    background: #f7f6f5;
+    color: #0a3c62;
+    border: none;
+    border-radius: 12px;
+    padding: 16px 50px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+.btn-confirmar:hover {
+    background: #668fab;
     color: #f7f6f5;
-}
-h1 a{
-    color: inherit;
-}
-table{
-    padding: 20px;
-    color: #f7f6f5;
-    border-radius: 10px;
-    text-shadow: 10px 10px 10px rgb(0, 0, 0);
-    background-color: #b8c9d5;
-}
-table tr td:nth-of-type(6), table tr td:nth-of-type(7){
-    color: #298a97;
-}
-table tr td, table tr th{
-    padding: 10px;
-}
-table tr td:hover{
-    color:#972969
-}
-.festivo, .festivo:hover{
-    color: red;
-}
-
-
-/**Visualizador horas*/
-#listadohoras{
-    display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto;
-    gap:8px;
-}
-.contenedorhora{
-    background-color: #b8c9d5;
-    opacity: 0.5;
-    border: solid black 0.5px;
-    width: 100px;
-    height: 30px;
-
-}
-.nodisponible{
-    background-color: #b8c9d5;
-    opacity: 1;
-}
-.citaseleccionada{
-    background-color: rgb(5, 174, 180);
-    opacity: 1;
+    transform: translateY(-3px);
 }

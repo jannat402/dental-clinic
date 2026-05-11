@@ -4,7 +4,7 @@ main {
     inset: 0;
     width: 100vw;
     height: 100vh;
-    background-color: #126b9d; /* azul original */
+    background: linear-gradient(135deg, #126b9d 0%, #0a3c62 100%);
     font-size: 20px;
     font-family: sans-serif;
     color: #f7f6f5;
@@ -16,11 +16,24 @@ main {
 }
 
 /* Título */
-h1 {
+.titulo {
     margin-top: 60px;
-    font-size: 2rem;
-    font-weight: 700;
+    font-size: 2.4rem;
+    font-weight: 800;
     text-align: center;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+}
+
+/* Texto */
+.descripcion {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+    width: 80%;
+    max-width: 600px;
+    font-size: 1.1rem;
+    line-height: 1.5;
 }
 
 /* Botón volver */
@@ -28,37 +41,31 @@ h1 {
     display: inline-block;
     margin-top: 15px;
     margin-bottom: 25px;
-    padding: 10px 20px;
-    background-color: #668fab; /* azul secundario */
+    padding: 12px 25px;
+    background-color: #668fab;
     color: #0a3c62;
     font-weight: 900;
-    border-radius: 10px;
+    border-radius: 12px;
     text-decoration: none;
     transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
 }
 
 .btn-volver:hover {
     background-color: #f7f6f5;
     color: #668fab;
-    border: 2px solid #f7f6f5;
+    transform: translateY(-3px);
 }
 
-/* Texto */
-p {
-    margin-top: 10px;
-    margin-bottom: 30px;
-    text-align: center;
-    width: 80%;
-    max-width: 600px;
-}
-
-/* Contenedor de tabla */
-#tabla-container {
+/* Contenedor glass */
+.contenedor-glass {
     width: 90%;
     max-width: 1000px;
-    background-color: rgba(255,255,255,0.1);
-    padding: 20px;
-    border-radius: 12px;
+    background: rgba(255,255,255,0.15);
+    padding: 25px;
+    border-radius: 15px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
 /* Tabla */
@@ -74,6 +81,8 @@ table th {
     background-color: #0a3c62;
     font-weight: 900;
     border-bottom: 3px solid #668fab;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 table td {
@@ -85,8 +94,9 @@ table td {
 /* Mensaje sin citas */
 .sin-citas {
     padding: 20px;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: 700;
+    text-align: center;
 }
 
 /* Botones */
@@ -97,22 +107,37 @@ table td {
     text-decoration: none;
     color: #0a3c62;
     transition: 0.3s;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
 }
 
 /* Botón eliminar */
 .eliminar {
-    background-color: red;
+    background-color: #d62828;
     color: white;
+}
+
+.eliminar:hover {
+    background-color: #f7f6f5;
+    color: #d62828;
 }
 
 /* Botón modificar */
 .modificar {
-    background-color: rgb(255, 217, 0);
+    background-color: rgb(245, 221, 86);
     color: #0a3c62;
 }
 
-/* Hover */
-.btn:hover {
+.modificar:hover {
     background-color: #f7f6f5;
-    color: #668fab;
+    color: rgb(255, 217, 0);
+}
+
+.alerta-exito {
+    background-color: #4caf50;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 700;
 }

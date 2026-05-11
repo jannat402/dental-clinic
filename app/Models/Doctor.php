@@ -20,6 +20,8 @@ class Doctor extends Authenticatable
         'contrasenya',
         'especialidad',
         'estado',
+        'doble_factor',
+        'user_id',
         'fecha_dato',
         'fecha_carga',
     ];
@@ -46,5 +48,10 @@ class Doctor extends Authenticatable
     public function historiales()
     {
         return $this->belongsToMany(HistorialClinico::class, 'doctor_historial', 'id_doctor', 'id_historial');
+    }
+
+    public function tratamientos()
+    {
+        return $this->belongsToMany(Tratamiento::class, 'doctor_tratamiento', 'id_doctor', 'id_tratamiento');
     }
 }

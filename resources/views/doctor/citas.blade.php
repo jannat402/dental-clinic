@@ -18,8 +18,8 @@
     <tr>
         <td>{{ $cita->cliente->nombre }} {{ $cita->cliente->apellidos }}</td>
         <td>{{ $cita->fecha }}</td>
-        <td>{{ $cita->hora }}</td>
-        <td>{{ $cita->tratamiento->nombre }}</td>
+        <td>{{ $cita->hora_inicio }}</td>
+        <td>{{ $cita->tratamiento->nombre_tratamiento }}</td>
         <td>{{ $cita->estado }}</td>
         <td>
             <a class="btn" href="{{ route('doctor.notas', $cita->id_cita) }}">Añadir notas</a>

@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'doctor'  => \App\Http\Middleware\CheckDoctor::class,
             'cliente' => \App\Http\Middleware\CheckCliente::class,
             'admin'   => \App\Http\Middleware\CheckAdmin::class,
+            'guest.custom' => \App\Http\Middleware\RedirectAutentificado::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

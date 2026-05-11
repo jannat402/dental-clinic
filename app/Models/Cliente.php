@@ -20,8 +20,11 @@ class Cliente extends Authenticatable
         'email',
         'contrasenya',
         'metodo_autenticacion',
+        'ultima_actividad',
+        'estat',
+        'user_id',
         'fecha_dato',
-        'fecha_carga',
+        'fecha_carga'
     ];
 
     protected $hidden = [

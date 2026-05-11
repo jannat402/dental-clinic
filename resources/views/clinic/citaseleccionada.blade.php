@@ -1,135 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ca">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Confirmar cita - Dental Clinic</title>
     <link rel="stylesheet" href="{{asset('css/citaseleccionada.css')}}">
 </head>
 <body>
     <main>
-        <h1>Bievenido a dental clinic</a></h1>
-        <p> Aquí puede reservar cita. Para cualquier problema o para agendar cita por teléfono, llama al 666666666</p>
-        <form action="">
-            <fieldset>
-                <input type="text" placeholder="Elige doctor" name="nombredoctor" id="nombredoctor">
-                <select name="tratamiento" id="tratamiento">
-                    <option value="Ortodoncia">Ortodoncia</option>
-                    <option value="Limpieza">Limpieza</option>
-                    <option value="Curetaje">Curetaje</option>
-                    <option value="Blanqueamiento">Blanqueamiento</option>
-                </select>
-                <p>Si no sabe qué necesita, puede solictar consulta inicial, y se le hará el tratamiento correspondiente en clínica o le asesorá nuestro dentista. Consulta nuestro blog de salud dental y el apartado de nuestros servicios para más información</p>
-                <input type="button" value="pagado">
-                <input type="submit" value="Completar reserva">
-            </fieldset>
-            <fieldset>
-                <table>
-                    <tr>
-                        <th>Lunes</th>
-                        <th>Martes</th>
-                        <th>Miercoles</th>
-                        <th>Jueves</th>
-                        <th>Viernes</th>
-                        <th>Sabado</th>
-                        <th>Domingo</th>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>1</td>
-                        <td>2</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>6</td>
-                        <td>7</td>
-                        <td>8</td>
-                        <td>9</td>
-                    </tr>
-                        <td>10</td>
-                        <td>11</td>
-                        <td>12</td>
-                        <td class="festivo">13</td>
-                        <td>14</td>
-                        <td>15</td>
-                        <td>16</td>
-                    </tr>
-                    </tr>
-                        <td>17</td>
-                        <td>18</td>
-                        <td>19</td>
-                        <td>20</td>
-                        <td>21</td>
-                        <td>22</td>
-                        <td>23</td>
-                    </tr>
-                    </tr>
-                        <td>24</td>
-                        <td>25</td>
-                        <td>26</td>
-                        <td>27</td>
-                        <td>28</td>
-                        <td>29</td>
-                        <td>30</td>
-                    </tr>
-                </table>
-                <div id="horas">
-                    <h2>Seleccione una franja</h2>
-                    <div id="listadohoras">
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora nodisponible citaseleccionada"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora nodisponible"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                        <div class="contenedorhora"></div>
-                    </div>
-                </div>
+        <h1>Confirma la teva cita</h1>
 
-                <input type="hidden" name="fecha" id="fecha">
-            </fieldset>
+        @php
+            $doctor = \App\Models\Doctor::find($id_doctor);
+            $tractament = \App\Models\Tratamiento::find($id_tratamiento);
+        @endphp
+
+        <div class="resum">
+            <div class="resum-item">
+                <span class="resum-label">Doctor</span>
+                <span class="resum-value">Dr. {{ $doctor->nombre ?? '' }} {{ $doctor->apellidos ?? '' }}</span>
+            </div>
+            <div class="resum-item">
+                <span class="resum-label">Tractament</span>
+                <span class="resum-value">{{ $tractament->nombre_tratamiento ?? '' }}</span>
+            </div>
+            <div class="resum-item">
+                <span class="resum-label">Data</span>
+                <span class="resum-value">{{ \Carbon\Carbon::parse($fecha)->format('d/m/Y') }}</span>
+            </div>
+            <div class="resum-item">
+                <span class="resum-label">Hora</span>
+                <span class="resum-value">{{ substr($hora_inicio, 0, 5) }} - {{ substr($hora_fin, 0, 5) }}</span>
+            </div>
+            <div class="resum-item">
+                <span class="resum-label">Preu</span>
+                <span class="resum-value">{{ $tractament->precio ?? '0' }}€</span>
+            </div>
+        </div>
+
+        <p style="text-align:center;margin-bottom:25px;">Revisa les dades abans de confirmar.</p>
+
+        <form action="{{ route('citas.store') }}" method="POST" style="text-align:center;">
+            @csrf
+            <input type="hidden" name="id_cliente" value="{{ session('cliente_id') }}">
+            <input type="hidden" name="id_doctor" value="{{ $id_doctor }}">
+            <input type="hidden" name="id_tratamiento" value="{{ $id_tratamiento }}">
+            <input type="hidden" name="fecha" value="{{ $fecha }}">
+            <input type="hidden" name="hora_inicio" value="{{ $hora_inicio }}">
+            <input type="hidden" name="hora_fin" value="{{ $hora_fin }}">
+            <input type="hidden" name="estado" value="reservada">
+            <input type="hidden" name="tipo_reserva" value="online">
+            @if(isset($clau))
+                <input type="hidden" name="clau" value="{{ $clau }}">
+            @endif
+            <button type="submit" class="btn-confirmar">Confirmar reserva</button>
         </form>
+
+        <div style="text-align:center;margin-top:15px;">
+            <a href="{{ route('pedircita') }}" style="color:rgba(255,255,255,0.7);">Tornar enrere</a>
+        </div>
     </main>
 </body>
 </html>

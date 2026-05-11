@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cliente;
-use App\Models\Doctor;            
-use App\Models\Administrativo;    
+use App\Models\Doctor;
+use App\Models\Administrativo;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
-class autenticarseController extends Controller
+class AutenticarseController extends Controller
 {
     // Mostrar login
     public function index()
@@ -25,60 +26,87 @@ class autenticarseController extends Controller
         ]);
 
         $login = $request->login;
-        $contrasenya = $request->password;
+        $password = $request->password;
 
-        // CLIENTE
-        $user = Cliente::where('email', $login)
+        /* ============================
+           1) LOGIN CLIENTE
+        ============================ */
+        $cliente = Cliente::where('email', $login)
             ->orWhere('telefono', $login)
             ->first();
 
-        if ($user && Hash::check($contrasenya, $user->contrasenya)) {
+        if ($cliente && Hash::check($password, $cliente->contrasenya)) {
+
+            if ($cliente->estat === 'arxivat') {
+                return back()->withErrors(['login' => 'Aquest compte està arxivat. Contacta amb l\'administrador.']);
+            }
+
+            $cliente->update(['ultima_actividad' => Carbon::now()]);
 
             session([
-                'cliente_id' => $user->id_cliente,
-                'cliente_nombre' => $user->nombre,
+                'rol' => 'cliente',
+                'cliente_id' => $cliente->id_cliente,
+                'cliente_nombre' => $cliente->nombre,
             ]);
 
-            // Cliente logueado → ir a pedir cita
             return redirect()->route('iniciusuario');
         }
 
-        // DOCTOR
+        /* ============================
+           2) LOGIN DOCTOR
+        ============================ */
         $doctor = Doctor::where('email', $login)->first();
 
-        if ($doctor && Hash::check($contrasenya, $doctor->contrasenya)) {
+        if ($doctor && Hash::check($password, $doctor->contrasenya)) {
+
+            if ($doctor->estado === 'baja') {
+                return back()->withErrors(['login' => 'Aquest compte de doctor està donat de baixa.']);
+            }
 
             session([
+                'rol' => 'doctor',
                 'doctor_id' => $doctor->id_doctor,
                 'doctor_nombre' => $doctor->nombre,
             ]);
 
-            return redirect()->route('agenda');
+            return redirect()->route('doctor.agenda');
         }
 
-        // ADMINISTRADOR
+        /* ============================
+           3) LOGIN ADMINISTRADOR
+        ============================ */
         $admin = Administrativo::where('email', $login)->first();
 
-        if ($admin && Hash::check($contrasenya, $admin->contrasenya)) {
+        if ($admin && Hash::check($password, $admin->contrasenya)) {
+
+            // 2FA per administradors amb doble factor activat
+            if ($admin->autenticacion_segura === '2FA' || $admin->autenticacion_segura === 'certificado') {
+                session([
+                    '2fa_pending_type' => 'admin',
+                    '2fa_pending_id' => $admin->id_admin,
+                ]);
+                return redirect()->route('2fa.enviar');
+            }
 
             session([
+                'rol' => 'admin',
                 'admin_id' => $admin->id_admin,
                 'admin_nombre' => $admin->nombre,
             ]);
 
-            return redirect()->route('vistaadministrador.paneladministrativo');
+            return redirect()->route('iniciadministrativo');
         }
 
         return back()->withErrors(['login' => 'Credenciales incorrectas']);
     }
 
-    // Mostrar registro
+    // Mostrar registro cliente
     public function registrar()
     {
         return view('vistacliente.registro');
     }
 
-    // Procesar registro
+    // Procesar registro cliente
     public function register(Request $request)
     {
         $request->validate([
@@ -100,13 +128,12 @@ class autenticarseController extends Controller
             'fecha_carga' => now(),
         ]);
 
-        // 🔥 Iniciar sesión automáticamente
         session([
+            'rol' => 'cliente',
             'cliente_id' => $cliente->id_cliente,
             'cliente_nombre' => $cliente->nombre,
         ]);
 
-        // 🔥 Después de registrarse → ir a pedir cita
         return redirect()->route('pedircita');
     }
 

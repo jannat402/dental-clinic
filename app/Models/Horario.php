@@ -19,6 +19,7 @@ class Horario extends Model
         'hora_fin',
         'disponible',
         'motivo_bloqueo',
+        'tipus_bloqueig',
         'fecha_dato',
         'fecha_carga'
     ];

@@ -8,32 +8,87 @@ use App\Models\Doctor;
 use App\Models\Tratamiento;
 use App\Models\Administrativo;
 use App\Models\Horario;
+use App\Services\AppointmentService;
+use App\Services\NotificationService;
 use Carbon\Carbon;
-use DateInterval;
-use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Date;
 
 class CitaController extends Controller
 {
     public function index()
     {
         $citas = Cita::with(['cliente', 'doctor', 'tratamiento', 'administrativo'])->get();
-        return view('citas.index', compact('citas'));
+        return view('vistacliente.panelcitas', compact('citas'));
     }
 
-    public function pedir(){
-        $doctores = Doctor::all();
+    public function pedir()
+    {
+        $doctores = Doctor::where('estado', 'activo')->get();
         $tratamientos = Tratamiento::all();
-        return view("clinic.seleccionarcita", compact('doctores', 'tratamientos'));
+        return view('clinic.seleccionarcita', compact('doctores', 'tratamientos'));
     }
-    public function confirmar(){
-        return view("clinic.citaseleccionada");
+
+    public function confirmar(Request $request)
+    {
+        $request->validate([
+            'id_doctor' => 'required|exists:doctor,id_doctor',
+            'id_tratamiento' => 'required|exists:tratamiento,id_tratamiento',
+            'fecha' => 'required|date',
+            'hora_inicio' => 'required',
+        ]);
+
+        $appointmentService = app(AppointmentService::class);
+
+        if (!$appointmentService->validarAntelacio($request->fecha)) {
+            return back()->withErrors(['fecha' => 'Les cites s\'han de reservar amb almenys 24 hores d\'antelació.']);
+        }
+
+        $tractament = Tratamiento::findOrFail($request->id_tratamiento);
+        $horaFi = Carbon::parse($request->hora_inicio)->addMinutes($tractament->duracion_minutos)->format('H:i:s');
+
+        $ocupada = Cita::where('id_doctor', $request->id_doctor)
+            ->where('fecha', $request->fecha)
+            ->where('hora_inicio', $request->hora_inicio)
+            ->whereIn('estado', ['reservada', 'pendiente_pago'])
+            ->exists();
+
+        if ($ocupada) {
+            $alternatives = $appointmentService->obtenirAlternatives(
+                $request->id_doctor,
+                $request->fecha,
+                $request->hora_inicio,
+                $tractament->duracion_minutos
+            );
+            return back()->with([
+                'error' => 'Aquesta franja ja està ocupada.',
+                'alternatives' => $alternatives
+            ]);
+        }
+
+        try {
+            $clauBloqueig = $appointmentService->bloquejarTemporalment(
+                $request->id_doctor,
+                $request->fecha,
+                $request->hora_inicio,
+                $horaFi
+            );
+        } catch (\RuntimeException $e) {
+            return back()->withErrors(['hora_inicio' => $e->getMessage()]);
+        }
+
+        return view('clinic.citaseleccionada', [
+            'clau' => $clauBloqueig,
+            'id_doctor' => $request->id_doctor,
+            'id_tratamiento' => $request->id_tratamiento,
+            'fecha' => $request->fecha,
+            'hora_inicio' => $request->hora_inicio,
+            'hora_fin' => $horaFi,
+        ]);
     }
 
     public function create()
     {
-        return view('citas.create', [
+        return view('vistacliente.create', [
             'clientes' => Cliente::all(),
             'doctores' => Doctor::all(),
             'tratamientos' => Tratamiento::all(),
@@ -52,12 +107,23 @@ class CitaController extends Controller
             'hora_inicio' => 'required',
             'hora_fin' => 'required|after:hora_inicio',
             'estado' => 'required|in:reservada,cancelada,completada,pendiente_pago',
-            'tipo_reserva' => 'required|in:online,presencial'
+            'tipo_reserva' => 'required|in:online,presencial',
+            'clau' => 'nullable|string'
         ]);
 
-        Cita::create($request->all());
+        if (!app(AppointmentService::class)->validarAntelacio($request->fecha)) {
+            return back()->withErrors(['fecha' => 'Les cites s\'han de reservar amb almenys 24 hores d\'antelació.']);
+        }
 
-        return redirect()->route('citas.index')->with('success', 'Cita creada correctamente');
+        $cita = Cita::create($request->except('clau'));
+
+        if (!empty($request->clau)) {
+            app(AppointmentService::class)->alliberarBloqueig($request->clau);
+        }
+
+        app(NotificationService::class)->enviarConfirmacio($cita);
+
+        return redirect()->route('mostrar')->with('success', 'Cita creada correctament');
     }
 
     public function show($id)
@@ -66,176 +132,137 @@ class CitaController extends Controller
         return view('citas.show', compact('cita'));
     }
 
-    public function edit($id)
+    public function edit($id_cita)
     {
-        $cita = Cita::findOrFail($id);
+        $cita = Cita::findOrFail($id_cita);
 
-        return view('citas.edit', [
+        if ($cita->id_cliente != session('cliente_id')) {
+            abort(403, 'No tens permís per modificar aquesta cita.');
+        }
+
+        if (!app(AppointmentService::class)->validarModificacio($cita->fecha)) {
+            return back()->withErrors(['error' => 'Només es poden modificar cites amb 48 hores d\'antelació.']);
+        }
+
+        return view('vistacliente.editar', [
             'cita' => $cita,
             'clientes' => Cliente::all(),
             'doctores' => Doctor::all(),
             'tratamientos' => Tratamiento::all(),
-            'admins' => Administrativo::all()
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id_cita)
     {
-        $cita = Cita::findOrFail($id);
+        $cita = Cita::findOrFail($id_cita);
 
         $request->validate([
-            'id_cliente' => 'required|exists:cliente,id_cliente',
             'id_doctor' => 'required|exists:doctor,id_doctor',
             'id_tratamiento' => 'required|exists:tratamiento,id_tratamiento',
-            'id_admin' => 'nullable|exists:administrativo,id_admin',
             'fecha' => 'required|date',
             'hora_inicio' => 'required',
-            'hora_fin' => 'required|after:hora_inicio',
-            'estado' => 'required|in:reservada,cancelada,completada,pendiente_pago',
-            'tipo_reserva' => 'required|in:online,presencial'
         ]);
 
-        $cita->update($request->all());
+        if (!app(AppointmentService::class)->validarModificacio($request->fecha)) {
+            return back()->withErrors(['error' => 'Només es poden modificar cites amb 48 hores d\'antelació.']);
+        }
 
-        return redirect()->route('citas.index')->with('success', 'Cita actualizada correctamente');
+        $tractament = Tratamiento::findOrFail($request->id_tratamiento);
+        $horaFi = Carbon::parse($request->hora_inicio)->addMinutes($tractament->duracion_minutos)->format('H:i:s');
+
+        $cita->update([
+            'id_doctor' => $request->id_doctor,
+            'id_tratamiento' => $request->id_tratamiento,
+            'fecha' => $request->fecha,
+            'hora_inicio' => $request->hora_inicio,
+            'hora_fin' => $horaFi,
+        ]);
+
+        app(NotificationService::class)->enviarModificacio($cita);
+
+        return redirect()->route('mostrar')->with('success', 'Cita actualitzada correctament');
     }
 
     public function destroy($id)
     {
-        Cita::destroy($id);
-        return redirect()->route('citas.index')->with('success', 'Cita eliminada');
+        $cita = Cita::findOrFail($id);
+
+        if ($cita->id_cliente != session('cliente_id')) {
+            abort(403, 'No tens permís per cancel·lar aquesta cita.');
+        }
+
+        if (!app(AppointmentService::class)->validarModificacio($cita->fecha)) {
+            return back()->withErrors(['error' => 'Només es poden cancel·lar cites amb 48 hores d\'antelació.']);
+        }
+
+        $cita->update(['estado' => 'cancelada']);
+
+        app(NotificationService::class)->enviarCancelacio($cita);
+
+        return redirect()->route('mostrar')->with('success', 'Cita cancel·lada correctament.');
     }
 
-public function horariosDisponibles(Request $request)
-{
-    $horarioDia = Horario::all()->where("id_doctor",$request->doctorSeleccionado)->where("fecha","2026-04-" . $request->dia)->first();
-    
-    if (!$horarioDia) {
-        return response()->json([
-            'ok' => false,
-            'mensaje' => 'No hay horario disponible para este día'
-        ]);
-    }
-    
-    $tratamiento = Tratamiento::find($request->tratamiento);
-    $duracion = $tratamiento ? $tratamiento->duracion_minutos : 60;
-    
-    $horas = $this->generarFranjasHorarias($horarioDia->hora_inicio, $horarioDia->hora_fin,$request->doctorSeleccionado,new DateTime("2026-04-" . $request->dia), $duracion);
-    return response()->json([
-        'ok' => true,
-        //'doctor' => $doctor->nombre . $doctor->apellidos,
-        'doctor_id'=>$request->doctorSeleccionado,
-        'fecha' =>"2026-04-" . $request->dia,
-        'horario' => $horarioDia,
-        'horas'=>$horas,
-        'duracion' => $duracion,
-        'precio' => $tratamiento ? $tratamiento->precio : 0
-    ]);
-}
-
-
-   private function sePuedeReservar($fecha, $horaInicio, $horaFin, $doctor): bool
+    // AJAX: retorna els dies disponibles per a un doctor
+    public function obtenerDias($idDoctor)
     {
-        // ❌ ANTES: comparación incorrecta y orWhere sin agrupar
-        // ✔️ AHORA: fórmula universal de solapamiento
-        //
-        // Dos intervalos se solapan si:
-        // inicio_existente < fin_nueva  AND  fin_existente > inicio_nueva
+        $horarios = Horario::where('id_doctor', $idDoctor)
+            ->where('disponible', true)
+            ->where('fecha', '>=', now()->toDateString())
+            ->orderBy('fecha')
+            ->get()
+            ->map(function ($h) {
+                return ['fecha' => $h->fecha];
+            });
 
-        $haySolape = Cita::where('id_doctor', $doctor)
-            ->where('fecha', $fecha)
-            ->where(function ($q) use ($horaInicio, $horaFin) {
-                $q->where('hora_inicio', '<', $horaFin->format('H:i:s'))
-                  ->where('hora_fin', '>', $horaInicio->format('H:i:s'));
-            })
-            ->exists();
-            
-        $hayHorario = Horario::where('id_doctor', $doctor)
-            ->where('fecha', $fecha)
-            ->where('hora_inicio', '<', $horaInicio->format('H:i:s'))
-            ->where('hora_fin', '>', $horaFin->format('H:i:s'))
-            ->exists();
-            
-        $sePuedeReservar = !$haySolape  && $hayHorario;
-
-        return $sePuedeReservar;
+        return response()->json($horarios);
     }
 
-
-
-//funcion que crea las franjas y mira cuales son disponibles
-function generarFranjasHorarias($inicio, $fin,$doctor,$fecha, $duracionTratamiento = 60)
-{
-    // Convertir a DateTime si son strings
-    if (is_string($inicio)) $inicio = DateTime::createFromFormat('H:i:s', $inicio);
-    if (is_string($fin)) $fin = DateTime::createFromFormat('H:i:s', $fin);
-    
-    $intervalo = new DateInterval('PT15M');
-    $duracion = new DateInterval('PT' . $duracionTratamiento . 'M');
-    $franjas = [];
-    $actual = clone $inicio;
-    
-    while ($actual <= $fin) {
-        $horaStr = $actual->format('H:i'); // Solo horas y minutos para la vista
-        $inicioHoraActual = clone $actual;
-        $finHoraActual = (clone $actual)->add($duracion);
-        
-        $franjas[] = [
-            'hora' => $horaStr,
-            'disponible' => $this->sePuedeReservar($fecha,$inicioHoraActual,$finHoraActual,$doctor)
-        ];
-        
-        $actual = $actual->add($intervalo);
+    // AJAX: retorna els tractaments disponibles per a un doctor
+    public function obtenerTratamientos($idDoctor)
+    {
+        $doctor = Doctor::with('tratamientos')->findOrFail($idDoctor);
+        return response()->json($doctor->tratamientos);
     }
-    
-return $franjas;
-}
 
-public function reservar(Request $request)
-{
-    $request->validate([
-        'doctor' => 'required',
-        'tratamiento' => 'required',
-        'fecha' => 'required',
-        'hora_inicio' => 'required'
-    ]);
-    
-    $fecha = $request->fecha;
-    $horaInicio = new DateTime($request->hora_inicio);
-    $duracion = (int)($request->duracion ?? 60);
-    $horaFin = (clone $horaInicio)->add(new DateInterval('PT' . $duracion . 'M'));
-    $doctor = $request->doctor;
-    
-    if (!$this->sePuedeReservar($fecha, $horaInicio, $horaFin, $doctor)) {
+    // AJAX: retorna les hores disponibles per a un doctor en una data
+    public function obtenerHoras($idDoctor, $fecha)
+    {
+        $horario = Horario::where('id_doctor', $idDoctor)
+            ->where('fecha', $fecha)
+            ->where('disponible', true)
+            ->first();
+
+        if (!$horario) {
+            return response()->json(['horarios' => [], 'ocupadas' => []]);
+        }
+
+        $citesOcupades = Cita::where('id_doctor', $idDoctor)
+            ->where('fecha', $fecha)
+            ->whereIn('estado', ['reservada', 'pendiente_pago'])
+            ->get(['hora_inicio', 'hora_fin']);
+
+        $inici = \Carbon\Carbon::parse($horario->hora_inicio);
+        $fi = \Carbon\Carbon::parse($horario->hora_fin);
+        $horarios = [];
+
+        while ($inici < $fi) {
+            $horaStr = $inici->format('H:i:s');
+            $ocupada = $citesOcupades->contains(function ($c) use ($horaStr) {
+                return $c->hora_inicio <= $horaStr && $c->hora_fin > $horaStr
+                    || $c->hora_inicio === $horaStr;
+            });
+
+            $horarios[] = [
+                'hora_inicio' => $horaStr,
+                'disponible' => $ocupada ? 0 : 1,
+            ];
+
+            $inici->addMinutes(30);
+        }
+
         return response()->json([
-            'ok' => false,
-            'mensaje' => 'El horario ya no está disponible'
+            'horarios' => $horarios,
+            'ocupadas' => $citesOcupades->pluck('hora_inicio'),
         ]);
     }
-    
-    $cita = Cita::create([
-        'id_cliente' => $request->cliente ?? 1,
-        'id_doctor' => $doctor,
-        'id_tratamiento' => $request->tratamiento,
-        'id_admin' => null,
-        'fecha' => $fecha,
-        'hora_inicio' => $horaInicio->format('H:i:s'),
-        'hora_fin' => $horaFin->format('H:i:s'),
-        'estado' => 'reservada',
-        'tipo_reserva' => 'online',
-        'fecha_dato' => now(),
-        'fecha_carga' => now()
-    ]);
-    
-    return response()->json([
-        'ok' => true,
-        'mensaje' => 'Cita reservada correctamente',
-        'cita' => $cita
-    ]);
 }
-
-     
-}
-
-
-

@@ -30,4 +30,9 @@ class Tratamiento extends Model
     {
         return $this->hasMany(Blog::class, 'id_tratamiento');
     }
+
+    public function doctors()
+    {
+        return $this->belongsToMany(Doctor::class, 'doctor_tratamiento', 'id_tratamiento', 'id_doctor');
+    }
 }

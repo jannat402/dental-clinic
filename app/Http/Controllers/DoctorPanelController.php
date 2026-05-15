@@ -200,6 +200,22 @@ class DoctorPanelController extends Controller
         return redirect()->route('doctor.seguimiento')->with('success', 'Cita de seguimiento creada');
     }
 
+    // FORMULARIO EDITAR CITA (doctor)
+    public function editarCita($id_cita)
+    {
+        if (!$this->checkAuth()) {
+            return redirect()->route('paginainici');
+        }
+
+        $cita = Cita::findOrFail($id_cita);
+
+        if ($cita->id_doctor != $this->getDoctorId()) {
+            abort(403, 'No pots modificar cites d\'un altre doctor.');
+        }
+
+        return view('doctor.cita-editar', compact('cita'));
+    }
+
     // MODIFICAR CITA (doctor)
     public function modificarCita(Request $request, $id_cita)
     {

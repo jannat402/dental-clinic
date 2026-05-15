@@ -24,8 +24,13 @@
         <td>{{ $cita->cliente->nombre }} {{ $cita->cliente->apellidos }}</td>
         <td>{{ $cita->tratamiento->nombre_tratamiento }}</td>
         <td>
+            <a class="btn" href="{{ route('doctor.notas', $cita->id_cita) }}">Notas</a>
+            <a class="btn" href="{{ route('doctor.historial.ver', $cita->id_cliente) }}">Historial</a>
             <a class="btn" href="{{ route('doctor.cita.editar', $cita->id_cita) }}">Modificar</a>
-            <a class="btn btn-danger" href="{{ route('doctor.cita.cancelar', $cita->id_cita) }}">Cancelar</a>
+            <form action="{{ route('doctor.cita.cancelar', $cita->id_cita) }}" method="POST" style="display:inline" onsubmit="return confirm('¿Cancelar esta cita?')">
+                @csrf
+                <button type="submit" class="btn btn-danger">Cancelar</button>
+            </form>
         </td>
     </tr>
     @endforeach

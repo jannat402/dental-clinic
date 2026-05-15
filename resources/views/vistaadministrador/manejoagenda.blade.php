@@ -1,22 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{{asset('css/panelusuario.css')}}">
-</head>
-<body>
-    <main>
-        <h1>Agenda</a></h1>
-        <p> Aquí puede reservar cita. Para cualquier problema o para agendar cita por teléfono, lama al 666666666</p>
-        <div id="botones">
-            <button><a href="#">consultar agenda</a></button>
-            <button><a href="#">Dar cita</a></button>
-            <button><a href="#">anular cita</a></button>
-            <button><a href="#">Proponer Cambio opcional de cita</a></button>
-            <button><a href="#">Proponer Cambio obligatorio de cita</a></button>
-        </div>
-    </main>
-</body>
-</html>
+@extends('layouts.admin-crud')
+@section('title', 'Gestión de Agenda')
+@section('contenido')
+
+<a href="{{ route('iniciadministrativo') }}" class="back-link">&larr; Volver al dashboard</a>
+
+<div class="section-header">
+    <h1>Gestión de Agenda</h1>
+    <p>Consulte y administre todas las citas del sistema.</p>
+</div>
+
+<div class="nav-grid">
+    <a href="{{ route('citas.index') }}" class="nav-card">
+        <span class="nav-icon-lg"><x-admin-icons icon="calendar" :size="36" /></span>
+        <span class="nav-label">Consultar agenda</span>
+    </a>
+    <a href="{{ route('citas.create') }}" class="nav-card">
+        <span class="nav-icon-lg"><x-admin-icons icon="plus" :size="36" /></span>
+        <span class="nav-label">Dar cita</span>
+    </a>
+</div>
+
+@endsection

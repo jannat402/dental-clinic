@@ -1,165 +1,386 @@
-/* ===========================
-   ESTILO GENERAL
-=========================== */
-body {
+*, *::before, *::after {
     margin: 0;
     padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f4f8fb; /* gris azulado suave */
-    color: #333;
+    box-sizing: border-box;
 }
 
-main {
-    width: 90%;
-    max-width: 1100px;
-    margin: 40px auto;
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.08);
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #126b9d 0%, #0a3c62 100%);
+    color: #f7f6f5;
+    min-height: 100vh;
 }
+
+a { text-decoration: none; }
 
 /* ===========================
    HEADER
-=========================== */
+   =========================== */
 header {
-    background-color: #1e88e5; /* azul corporativo */
-    padding: 20px;
-    color: white;
-    text-align: center;
-    border-bottom: 4px solid #1565c0;
+    background: rgba(10, 60, 98, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 16px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #668fab;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 header h2 {
-    margin: 0;
-    font-size: 26px;
-    font-weight: bold;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #f7f6f5;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* ===========================
-   NAV
-=========================== */
 nav {
-    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 nav a {
-    color: white;
-    text-decoration: none;
-    margin: 0 12px;
-    font-weight: bold;
+    color: #c8d8e4;
+    font-size: 0.85rem;
+    font-weight: 700;
     padding: 8px 14px;
-    border-radius: 6px;
+    border-radius: 10px;
     transition: 0.3s;
 }
 
 nav a:hover {
-    background-color: rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.12);
+    color: #f7f6f5;
 }
 
-/* Botón logout */
 nav form button {
-    background-color: #e53935;
-    border: none;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
     padding: 8px 14px;
-    border-radius: 6px;
-    color: white;
-    font-weight: bold;
+    border-radius: 10px;
+    color: #e8c0c0;
+    font-weight: 700;
+    font-size: 0.85rem;
     cursor: pointer;
     transition: 0.3s;
+    font-family: inherit;
 }
 
 nav form button:hover {
-    background-color: #c62828;
+    background: rgba(255,80,80,0.2);
+    color: #f7f6f5;
+}
+
+/* ===========================
+   MAIN CONTENT
+   =========================== */
+main {
+    width: 90%;
+    max-width: 1100px;
+    margin: 30px auto;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* ===========================
    TITULOS
-=========================== */
+   =========================== */
 h1 {
-    font-size: 28px;
-    color: #1565c0;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #f7f6f5;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.25);
     margin-bottom: 20px;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #f7f6f5;
+    margin-bottom: 16px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* ===========================
+   TARJETAS GLASSMORPHISM
+   =========================== */
+.box {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    margin-bottom: 24px;
+    width: 100%;
+    max-width: 900px;
+}
+
+.box p {
+    color: #e8ecf0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.box p strong {
+    color: #f7f6f5;
 }
 
 /* ===========================
    TABLAS
-=========================== */
+   =========================== */
 table {
     width: 100%;
+    max-width: 1000px;
     border-collapse: collapse;
-    margin-top: 20px;
-    background: white;
+    color: #f7f6f5;
+    font-size: 0.95rem;
+    background: rgba(255,255,255,0.08);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    margin: 0 auto 24px;
 }
 
 table th {
-    background-color: #1e88e5;
-    color: white;
-    padding: 12px;
+    padding: 14px 16px;
+    background-color: #0a3c62;
+    font-weight: 800;
+    font-size: 0.8rem;
+    border-bottom: 3px solid #668fab;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #f7f6f5;
     text-align: left;
 }
 
 table td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    color: #e8ecf0;
 }
 
 table tr:hover {
-    background-color: #f1f7ff;
-}
-
-/* ===========================
-   BOTONES
-=========================== */
-button, .btn {
-    background-color: #1e88e5;
-    color: white;
-    padding: 10px 18px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
-    display: inline-block;
-    transition: 0.3s;
-}
-
-button:hover, .btn:hover {
-    background-color: #1565c0;
-}
-
-/* Botón rojo */
-.btn-danger {
-    background-color: #e53935;
-}
-
-.btn-danger:hover {
-    background-color: #c62828;
+    background: rgba(255,255,255,0.06);
 }
 
 /* ===========================
    FORMULARIOS
-=========================== */
-textarea, input[type="text"], input[type="email"], input[type="date"], input[type="time"] {
+   =========================== */
+label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #b8c9d5;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[type="time"],
+input[type="number"],
+textarea,
+select {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #bbb;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    font-size: 16px;
+    padding: 10px 14px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: rgba(255,255,255,0.08);
+    color: #f7f6f5;
+    transition: 0.3s;
+    margin-bottom: 16px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #668fab;
+    background: rgba(255,255,255,0.15);
+    box-shadow: 0 0 0 3px rgba(102,143,171,0.3);
 }
 
 textarea {
     resize: vertical;
+    min-height: 80px;
+}
+
+select option {
+    background: #0a3c62;
+    color: #f7f6f5;
 }
 
 /* ===========================
-   CONTENEDORES
-=========================== */
-.box {
-    background: #ffffff;
-    padding: 20px;
+   BOTONES
+   =========================== */
+.btn, button:not(nav button) {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #668fab;
+    color: #0a3c62;
+    font-weight: 800;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    line-height: 1.4;
+}
+
+.btn:hover, button:not(nav button):hover {
+    background-color: #f7f6f5;
+    color: #668fab;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+}
+
+.btn-danger {
+    background-color: #d62828;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #f7f6f5;
+    color: #d62828;
+}
+
+.btn-sm {
+    padding: 7px 14px;
+    font-size: 0.8rem;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 12px;
+}
+
+/* ===========================
+   ALERTAS
+   =========================== */
+.success-msg {
+    background: rgba(22, 163, 74, 0.2);
+    border: 1px solid rgba(22, 163, 74, 0.4);
+    color: #bbf7d0;
+    padding: 12px 20px;
     border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
     margin-bottom: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+}
+
+.alert-error {
+    background: rgba(220, 38, 38, 0.2);
+    border: 1px solid rgba(220, 38, 38, 0.4);
+    color: #fecaca;
+    padding: 12px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+}
+
+/* ===========================
+   DETALLE
+   =========================== */
+.detail-group {
+    margin-bottom: 14px;
+}
+
+.detail-group label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #b8c9d5;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.detail-group .detail-value {
+    font-size: 1rem;
+    color: #e8ecf0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ===========================
+   PAGINACION
+   =========================== */
+.pagination {
+    display: flex;
+    gap: 6px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.pagination a,
+.pagination span {
+    padding: 6px 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #b8c9d5;
+    background: rgba(255,255,255,0.08);
+}
+
+.pagination a:hover {
+    background: rgba(255,255,255,0.15);
+}
+
+.pagination span.current {
+    background: #668fab;
+    color: #0a3c62;
+    border-color: #668fab;
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 16px;
+    }
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    main {
+        width: 95%;
+        padding: 20px;
+    }
+    table th, table td {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+    }
 }

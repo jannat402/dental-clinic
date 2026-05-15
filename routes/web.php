@@ -74,6 +74,7 @@ Route::middleware('doctor')->group(function () {
     Route::get('/doctor/seguimiento/crear/{id_cliente}', [DoctorPanelController::class, 'crearSeguimiento'])->name('doctor.seguimiento.crear');
     Route::post('/doctor/seguimiento/crear/{id_cliente}', [DoctorPanelController::class, 'guardarSeguimiento'])->name('doctor.seguimiento.guardar');
 
+    Route::get('/doctor/citas/{id_cita}/editar', [DoctorPanelController::class, 'editarCita'])->name('doctor.cita.editar');
     Route::post('/doctor/citas/{id_cita}/modificar', [DoctorPanelController::class, 'modificarCita'])->name('doctor.cita.modificar');
     Route::post('/doctor/citas/{id_cita}/cancelar', [DoctorPanelController::class, 'cancelarCita'])->name('doctor.cita.cancelar');
 });
@@ -103,6 +104,6 @@ Route::get('/payment/{id_cita}/success', [PaymentController::class, 'success'])-
 /* 2FA */
 Route::middleware('guest.custom')->group(function () {
     Route::get('/2fa/verify', [App\Http\Controllers\TwoFactorController::class, 'index'])->name('2fa.form');
-    Route::post('/2fa/enviar', [App\Http\Controllers\TwoFactorController::class, 'enviarCodi'])->name('2fa.enviar');
-    Route::post('/2fa/verificar', [App\Http\Controllers\TwoFactorController::class, 'verificar'])->name('2fa.verificar');
+    Route::any('/2fa/enviar', [App\Http\Controllers\TwoFactorController::class, 'enviarCodi'])->name('2fa.enviar');
+    Route::any('/2fa/verificar', [App\Http\Controllers\TwoFactorController::class, 'verificar'])->name('2fa.verificar');
 });

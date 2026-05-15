@@ -2,10 +2,24 @@
 @section('title', 'Detalle historial')
 @section('contenido')
 <h1>Historial clínico</h1>
-<p><strong>Cliente:</strong> {{ $historial->cliente->nombre }} {{ $historial->cliente->apellidos }}</p>
-<p><strong>Notas:</strong> {{ $historial->notas_diagnostico }}</p>
-<p><strong>Documentos:</strong> {{ $historial->documentos_adjuntos ?? '—' }}</p>
-<p><strong>Última actualización:</strong> {{ $historial->fecha_ultima_actualizacion }}</p>
+<div class="box">
+    <div class="detail-group">
+        <label>Cliente</label>
+        <div class="detail-value">{{ $historial->cliente->nombre }} {{ $historial->cliente->apellidos }}</div>
+    </div>
+    <div class="detail-group">
+        <label>Notas de diagnóstico</label>
+        <div class="detail-value">{{ $historial->notas_diagnostico }}</div>
+    </div>
+    <div class="detail-group">
+        <label>Documentos adjuntos</label>
+        <div class="detail-value">{{ $historial->documentos_adjuntos ?? '—' }}</div>
+    </div>
+    <div class="detail-group">
+        <label>Última actualización</label>
+        <div class="detail-value">{{ $historial->fecha_ultima_actualizacion }}</div>
+    </div>
+</div>
 <a class="btn" href="{{ route('historial.edit', $historial->id_historial) }}">Editar</a>
 <a class="btn" href="{{ route('historial.index') }}">Volver</a>
 @endsection

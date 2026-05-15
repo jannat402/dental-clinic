@@ -77,13 +77,7 @@ class AutenticarseController extends Controller
 
             if ($admin && Hash::check($password, $admin->contrasenya)) {
 
-                if ($admin->autenticacion_segura === '2FA' || $admin->autenticacion_segura === 'certificado') {
-                    session([
-                        '2fa_pending_type' => 'admin',
-                        '2fa_pending_id' => $admin->id_admin,
-                    ]);
-                    return redirect()->route('2fa.enviar');
-                }
+                session()->forget(['2fa_pending_type', '2fa_pending_id', '2fa_codi', '2fa_expira']);
 
                 session([
                     'rol' => 'admin',

@@ -11,7 +11,7 @@
     <h2>Bienvenido Dr. {{ session('doctor_nombre') }}</h2>
 
     <nav>
-        <a href="{{ route('agenda') }}">Agenda</a>
+        <a href="{{ route('doctor.agenda') }}">Agenda</a>
         <a href="{{ route('doctor.citas') }}">Citas</a>
         <a href="{{ route('doctor.historial') }}">Historiales</a>
         <a href="{{ route('doctor.seguimiento') }}">Seguimiento</a>
@@ -24,6 +24,12 @@
 </header>
 
 <main>
+    @if(session('success'))
+        <div class="success-msg">{{ session('success') }}</div>
+    @endif
+    @if($errors->any())
+        <div class="alert-error">{{ $errors->first() }}</div>
+    @endif
     @yield('contenido')
 </main>
 

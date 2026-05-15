@@ -22,7 +22,7 @@ class TwoFactorController extends Controller
         return view('auth.verify-2fa', compact('tipus'));
     }
 
-    // Generar y enviar código 2FA, mostrar formulario
+    // Generar y enviar código 2FA
     public function enviarCodi()
     {
         $tipus = session('2fa_pending_type');
@@ -32,6 +32,13 @@ class TwoFactorController extends Controller
             return redirect()->route('paginainici');
         }
 
+        $this->generarCodi($tipus, $id);
+
+        return redirect()->route('2fa.form')->with('success', 'Codi enviat al teu correu.');
+    }
+
+    private function generarCodi(string $tipus, int $id): void
+    {
         $codi = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
         session(['2fa_codi' => $codi, '2fa_expira' => now()->addMinutes(5)]);
@@ -51,8 +58,6 @@ class TwoFactorController extends Controller
                 });
             }
         }
-
-        return redirect()->route('2fa.form')->with('success', 'Codi enviat al teu correu.');
     }
 
     // Verificar código 2FA

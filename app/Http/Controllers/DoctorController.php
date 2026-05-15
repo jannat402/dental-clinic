@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Doctor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class DoctorController extends Controller
 {
@@ -23,11 +24,22 @@ class DoctorController extends Controller
         $request->validate([
             'nombre' => 'required',
             'apellidos' => 'required',
+            'email' => 'required|email|unique:doctor,email',
             'especialidad' => 'nullable',
-            'estado' => 'required|in:activo,vacaciones,baja'
+            'contrasenya' => 'required|min:4',
+            'doble_factor' => 'required|in:0,1',
         ]);
 
-        Doctor::create($request->all());
+        Doctor::create([
+            'nombre' => $request->nombre,
+            'apellidos' => $request->apellidos,
+            'email' => $request->email,
+            'especialidad' => $request->especialidad,
+            'contrasenya' => Hash::make($request->contrasenya),
+            'estado' => 'activo',
+            'doble_factor' => $request->doble_factor,
+            'user_id' => 1,
+        ]);
 
         return redirect()->route('doctores.index')->with('success', 'Doctor creado correctamente');
     }
@@ -51,11 +63,26 @@ class DoctorController extends Controller
         $request->validate([
             'nombre' => 'required',
             'apellidos' => 'required',
+            'email' => 'required|email|unique:doctor,email,' . $id . ',id_doctor',
             'especialidad' => 'nullable',
-            'estado' => 'required|in:activo,vacaciones,baja'
+            'estado' => 'required|in:activo,vacaciones,baja',
+            'doble_factor' => 'required|in:0,1',
         ]);
 
-        $doctor->update($request->all());
+        $data = [
+            'nombre' => $request->nombre,
+            'apellidos' => $request->apellidos,
+            'email' => $request->email,
+            'especialidad' => $request->especialidad,
+            'estado' => $request->estado,
+            'doble_factor' => $request->doble_factor,
+        ];
+
+        if ($request->filled('contrasenya')) {
+            $data['contrasenya'] = Hash::make($request->contrasenya);
+        }
+
+        $doctor->update($data);
 
         return redirect()->route('doctores.index')->with('success', 'Doctor actualizado correctamente');
     }

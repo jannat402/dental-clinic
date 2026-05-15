@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class ClienteController extends Controller
 {
@@ -23,12 +24,21 @@ class ClienteController extends Controller
         $request->validate([
             'nombre' => 'required',
             'apellidos' => 'required',
-            'telefono' => 'nullable',
-            'email' => 'nullable|email',
-            'metodo_autenticacion' => 'required|in:telefono,email'
+            'telefono' => 'required|digits:9',
+            'email' => 'required|email|unique:cliente,email',
+            'contrasenya' => 'required|min:4',
         ]);
 
-        Cliente::create($request->all());
+        Cliente::create([
+            'nombre' => $request->nombre,
+            'apellidos' => $request->apellidos,
+            'telefono' => $request->telefono,
+            'email' => $request->email,
+            'contrasenya' => Hash::make($request->contrasenya),
+            'metodo_autenticacion' => 'email',
+            'fecha_dato' => now(),
+            'fecha_carga' => now(),
+        ]);
 
         return redirect()->route('clientes.index')->with('success', 'Cliente creado correctamente');
     }
@@ -52,12 +62,22 @@ class ClienteController extends Controller
         $request->validate([
             'nombre' => 'required',
             'apellidos' => 'required',
-            'telefono' => 'nullable',
-            'email' => 'nullable|email',
-            'metodo_autenticacion' => 'required|in:telefono,email'
+            'telefono' => 'required|digits:9',
+            'email' => 'required|email|unique:cliente,email,' . $id . ',id_cliente',
         ]);
 
-        $cliente->update($request->all());
+        $data = [
+            'nombre' => $request->nombre,
+            'apellidos' => $request->apellidos,
+            'telefono' => $request->telefono,
+            'email' => $request->email,
+        ];
+
+        if ($request->filled('contrasenya')) {
+            $data['contrasenya'] = Hash::make($request->contrasenya);
+        }
+
+        $cliente->update($data);
 
         return redirect()->route('clientes.index')->with('success', 'Cliente actualizado correctamente');
     }

@@ -27,7 +27,9 @@ class TratamientoController extends Controller
             'descripcion' => 'nullable'
         ]);
 
-        Tratamiento::create($request->all());
+        Tratamiento::create($request->only([
+            'nombre_tratamiento', 'duracion_minutos', 'precio', 'descripcion'
+        ]));
 
         return redirect()->route('tratamientos.index')->with('success', 'Tratamiento creado correctamente');
     }
@@ -55,7 +57,9 @@ class TratamientoController extends Controller
             'descripcion' => 'nullable'
         ]);
 
-        $tratamiento->update($request->all());
+        $tratamiento->update($request->only([
+            'nombre_tratamiento', 'duracion_minutos', 'precio', 'descripcion'
+        ]));
 
         return redirect()->route('tratamientos.index')->with('success', 'Tratamiento actualizado correctamente');
     }

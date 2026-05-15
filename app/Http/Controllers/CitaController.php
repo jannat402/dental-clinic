@@ -187,11 +187,15 @@ class CitaController extends Controller
     {
         $cita = Cita::findOrFail($id);
 
-        if ($cita->id_cliente != session('cliente_id')) {
+        $esCliente = session('cliente_id') && $cita->id_cliente == session('cliente_id');
+        $esAdmin = session('rol') === 'admin';
+        $esDoctor = session('rol') === 'doctor' && $cita->id_doctor == session('doctor_id');
+
+        if (!$esCliente && !$esAdmin && !$esDoctor) {
             abort(403, 'No tienes permiso para cancelar esta cita.');
         }
 
-        if (!app(AppointmentService::class)->validarModificacio($cita->fecha)) {
+        if (!$esAdmin && !$esDoctor && !app(AppointmentService::class)->validarModificacio($cita->fecha)) {
             return back()->withErrors(['error' => 'Solo se pueden cancelar citas con 48 horas de antelación.']);
         }
 
@@ -199,7 +203,8 @@ class CitaController extends Controller
 
         app(NotificationService::class)->enviarCancelacio($cita);
 
-        return redirect()->route('mostrar')->with('success', 'Cita cancelada correctamente.');
+        $ruta = $esAdmin ? route('citas.index') : route('mostrar');
+        return redirect($ruta)->with('success', 'Cita cancelada correctamente.');
     }
 
     // AJAX: retorna els dies disponibles per a un doctor

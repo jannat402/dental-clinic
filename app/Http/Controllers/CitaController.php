@@ -275,6 +275,7 @@ class CitaController extends Controller
      */
     public function obtenerHoras($idDoctor, $fecha)
     {
+        // Primero, se obtiene el horario del doctor para esa fecha.
         $horario = Horario::where('id_doctor', $idDoctor)
             ->where('fecha', $fecha)
             ->where('disponible', true)
@@ -283,7 +284,7 @@ class CitaController extends Controller
         if (!$horario) {
             return response()->json(['horarios' => [], 'ocupadas' => []]);
         }
-
+        // Obtener las citas que ya ocupan franjas en esa fecha para ese doctor.
         $citesOcupades = Cita::where('id_doctor', $idDoctor)
             ->where('fecha', $fecha)
             ->whereIn('estado', ['reservada', 'pendiente_pago'])
@@ -295,10 +296,11 @@ class CitaController extends Controller
 
         $limite24h = now()->addHours(24);
 
+        // genero los slots de 30 minutos entre hora_inicio y hora_fin, marcando como ocupados los que ya tienen cita o están dentro de las próximas 24 horas.
         while ($inici < $fi) {
             $horaStr = $inici->format('H:i:s');
             $slotDateTime = \Carbon\Carbon::parse($fecha . ' ' . $horaStr);
-
+        // Si la franja es dentro de las próximas 24 horas, se marca como ocupada automáticamente.
             $fuera24h = $slotDateTime->gte($limite24h);
             $ocupada = !$fuera24h || $citesOcupades->contains(function ($c) use ($horaStr) {
                 return $c->hora_inicio <= $horaStr && $c->hora_fin > $horaStr
@@ -312,7 +314,7 @@ class CitaController extends Controller
 
             $inici->addMinutes(30);
         }
-
+        // Retorno tanto los horarios generados como las horas que ya están ocupadas para que el frontend pueda deshabilitarlas.
         return response()->json([
             'horarios' => $horarios,
             'ocupadas' => $citesOcupades->pluck('hora_inicio'),

@@ -77,7 +77,16 @@ class AutenticarseController extends Controller
 
             if ($admin && Hash::check($password, $admin->contrasenya)) {
 
-                session()->forget(['2fa_pending_type', '2fa_pending_id', '2fa_codi', '2fa_expira']);
+                session()->forget(['2fa_codi', '2fa_expira']);
+
+                if ($admin->autenticacion_segura === '2FA') {
+                    session([
+                        '2fa_pending_type' => 'admin',
+                        '2fa_pending_id' => $admin->id_admin,
+                    ]);
+                    app(\App\Http\Controllers\TwoFactorController::class)->generarCodi('admin', $admin->id_admin);
+                    return redirect()->route('2fa.form')->with('success', 'Codi enviat al teu correu.');
+                }
 
                 session([
                     'rol' => 'admin',

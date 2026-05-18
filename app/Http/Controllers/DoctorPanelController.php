@@ -36,6 +36,7 @@ class DoctorPanelController extends Controller
         }
 
         $citas = Cita::where('id_doctor', $this->getDoctorId())
+            ->where('estado', '!=', 'cancelada')
             ->orderBy('fecha')
             ->orderBy('hora_inicio')
             ->get();

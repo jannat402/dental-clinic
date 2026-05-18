@@ -11,70 +11,64 @@ class HorarioSeeder extends Seeder
 {
     public function run(): void
     {
-        // Crear horarios amb tipus_bloqueig per a doctors existents
         $doctores = Doctor::all();
 
         if ($doctores->isEmpty()) {
-            Doctor::factory(3)->create();
-            $doctores = Doctor::all();
+            $doctores = Doctor::factory(4)->create();
         }
 
-        // Horari disponible per cada doctor (avui + 1 dia)
         $avui = Carbon::today();
-        foreach ($doctores as $doctor) {
-            Horario::create([
-                'id_doctor' => $doctor->id_doctor,
-                'fecha' => $avui->copy()->addDay()->toDateString(),
-                'hora_inicio' => '09:00:00',
-                'hora_fin' => '17:00:00',
-                'disponible' => true,
-                'motivo_bloqueo' => null,
-                'tipus_bloqueig' => null,
-                'fecha_dato' => now(),
-                'fecha_carga' => now(),
-            ]);
+        $horariosPerDoctor = [
+            ['hora_inicio' => '09:00', 'hora_fin' => '17:00'],
+            ['hora_inicio' => '08:00', 'hora_fin' => '16:00'],
+            ['hora_inicio' => '10:00', 'hora_fin' => '18:00'],
+            ['hora_inicio' => '09:00', 'hora_fin' => '15:00'],
+        ];
 
-            // Bloqueig per vacances d'aquí 5 dies
-            Horario::create([
-                'id_doctor' => $doctor->id_doctor,
-                'fecha' => $avui->copy()->addDays(5)->toDateString(),
-                'hora_inicio' => '08:00:00',
-                'hora_fin' => '20:00:00',
-                'disponible' => false,
-                'motivo_bloqueo' => 'Doctor de vacances',
-                'tipus_bloqueig' => 'vacaciones',
-                'fecha_dato' => now(),
-                'fecha_carga' => now(),
-            ]);
+        // Dies especials: vacances (dia 3), tancament (dia 12)
+        $fechaVac = $avui->copy()->addDays(3);
+        $fechaTancament = $avui->copy()->addDays(12);
+
+        foreach ($doctores as $index => $doctor) {
+            $franja = $horariosPerDoctor[$index % count($horariosPerDoctor)];
+
+            for ($dia = 1; $dia <= 14; $dia++) {
+                $fecha = $avui->copy()->addDays($dia);
+
+                if ($fecha->isWeekend()) {
+                    continue;
+                }
+
+                $disponible = true;
+                $motiu = null;
+                $tipus = null;
+
+                // Dia de vacances per a aquest doctor
+                if ($fecha->eq($fechaVac)) {
+                    $disponible = false;
+                    $motiu = 'Vacaciones';
+                    $tipus = 'vacaciones';
+                }
+
+                // Tancament del centre (tots els doctors)
+                if ($fecha->eq($fechaTancament)) {
+                    $disponible = false;
+                    $motiu = 'Tancament del centre';
+                    $tipus = 'tancament';
+                }
+
+                Horario::create([
+                    'id_doctor' => $doctor->id_doctor,
+                    'fecha' => $fecha->toDateString(),
+                    'hora_inicio' => $franja['hora_inicio'] . ':00',
+                    'hora_fin' => $franja['hora_fin'] . ':00',
+                    'disponible' => $disponible,
+                    'motivo_bloqueo' => $motiu,
+                    'tipus_bloqueig' => $tipus,
+                    'fecha_dato' => now(),
+                    'fecha_carga' => now(),
+                ]);
+            }
         }
-
-        // Bloqueig per tancament del centre d'aquí 10 dies
-        Horario::create([
-            'id_doctor' => $doctores->first()->id_doctor,
-            'fecha' => $avui->copy()->addDays(10)->toDateString(),
-            'hora_inicio' => '09:00:00',
-            'hora_fin' => '15:00:00',
-            'disponible' => false,
-            'motivo_bloqueo' => 'Tancament per inventari',
-            'tipus_bloqueig' => 'tancament',
-            'fecha_dato' => now(),
-            'fecha_carga' => now(),
-        ]);
-
-        // Bloqueig per manteniment d'aquí 3 dies
-        Horario::create([
-            'id_doctor' => $doctores->last()->id_doctor,
-            'fecha' => $avui->copy()->addDays(3)->toDateString(),
-            'hora_inicio' => '10:00:00',
-            'hora_fin' => '12:00:00',
-            'disponible' => false,
-            'motivo_bloqueo' => null,
-            'tipus_bloqueig' => 'mantenimiento',
-            'fecha_dato' => now(),
-            'fecha_carga' => now(),
-        ]);
-
-        // 20 horaris aleatoris addicionals via factory
-        Horario::factory(20)->create();
     }
 }

@@ -37,7 +37,7 @@ class TwoFactorController extends Controller
         return redirect()->route('2fa.form')->with('success', 'Codi enviat al teu correu.');
     }
 
-    private function generarCodi(string $tipus, int $id): void
+    public function generarCodi(string $tipus, int $id): void
     {
         $codi = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
@@ -58,6 +58,8 @@ class TwoFactorController extends Controller
                 });
             }
         }
+
+        logger()->info("Codi 2FA per a {$tipus} {$id}: {$codi}");
     }
 
     // Verificar código 2FA

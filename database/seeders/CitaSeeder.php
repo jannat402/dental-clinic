@@ -7,70 +7,98 @@ use App\Models\Cliente;
 use App\Models\Doctor;
 use App\Models\Horario;
 use App\Models\Tratamiento;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class CitaSeeder extends Seeder
 {
     public function run(): void
     {
-        // 200 citas
-        for ($i = 0; $i < 20; $i++) {
+        $clients = Cliente::all();
+        $tractaments = Tratamiento::all();
+        $doctors = Doctor::all();
 
-            $doctor = Doctor::inRandomOrder()->first();
-            $cliente = Cliente::inRandomOrder()->first();
-            $tratamiento = Tratamiento::inRandomOrder()->first();
+        // Per cada doctor, crear 3-5 cites en dies diferents
+        foreach ($doctors as $doctor) {
+            $horariosDisponibles = Horario::where('id_doctor', $doctor->id_doctor)
+                ->where('disponible', true)
+                ->where('fecha', '>=', now()->addHours(24)->toDateString())
+                ->get();
 
-            //GENERACIÓN DE FECHA Y HORAS
-            do {
-                $fecha = fake()->dateTimeBetween('now', '+10 days')->format('Y-m-d');
+            if ($horariosDisponibles->isEmpty()) {
+                continue;
+            }
 
-                $horaInicio = fake()->dateTimeBetween("$fecha 08:00", "$fecha 22:00");
-                $duracion = $tratamiento->duracion_minutos;
-                $horaFin = (clone $horaInicio)->modify("+$duracion minutes");
+            $numCites = min(rand(3, 5), $horariosDisponibles->count());
 
-            // usamos la fórmula universal correcta
-            } while (!$this->sePuedeReservar($fecha, $horaInicio, $horaFin, $doctor));
+            for ($i = 0; $i < $numCites; $i++) {
+                $horario = $horariosDisponibles->random();
+                $cliente = $clients->random();
+                $tractament = $tractaments->random();
 
-            //guardamos solo IDs
-            Cita::create([
-                'id_cliente'      => $cliente->id_cliente,
-                'id_doctor'       => $doctor->id_doctor,
-                'id_tratamiento'  => $tratamiento->id_tratamiento,
-                'id_admin'        => null,
+                $iniciFranja = Carbon::parse($horario->hora_inicio);
+                $fiFranja = Carbon::parse($horario->hora_fin);
+                $durada = $tractament->duracion_minutos;
 
-                //Guardamos horas como strings válidos
-                'fecha'           => $fecha,
-                'hora_inicio'     => $horaInicio->format('H:i:s'),
-                'hora_fin'        => $horaFin->format('H:i:s'),
+                // Buscar un slot lliure dins el horari
+                $slot = $this->trobarSlotLliure($doctor->id_doctor, $horario->fecha, $iniciFranja, $fiFranja, $durada);
 
-                'estado'          => 'reservada',
-                'tipo_reserva'    => 'presencial',
-                'fecha_dato'      => now(),
-                'fecha_carga'     => now(),
-            ]);
+                if ($slot === null) {
+                    continue;
+                }
+
+                Cita::create([
+                    'id_cliente' => $cliente->id_cliente,
+                    'id_doctor' => $doctor->id_doctor,
+                    'id_tratamiento' => $tractament->id_tratamiento,
+                    'id_admin' => null,
+                    'fecha' => $horario->fecha,
+                    'hora_inicio' => $slot->format('H:i:s'),
+                    'hora_fin' => $slot->copy()->addMinutes($durada)->format('H:i:s'),
+                    'estado' => 'reservada',
+                    'tipo_reserva' => 'online',
+                    'fecha_dato' => now(),
+                    'fecha_carga' => now(),
+                ]);
+
+                // No usar el mateix horari per a més d'una cita
+                $horariosDisponibles = $horariosDisponibles->reject(function ($h) use ($horario) {
+                    return $h->id_horario === $horario->id_horario;
+                });
+
+                if ($horariosDisponibles->isEmpty()) {
+                    break;
+                }
+            }
         }
     }
 
-    private function sePuedeReservar($fecha, $horaInicio, $horaFin, $doctor): bool
+    private function trobarSlotLliure(int $idDoctor, string $fecha, Carbon $inici, Carbon $fi, int $duradaMinuts): ?Carbon
     {
-        // fórmula universal de solapamientO
-        // Dos intervalos se solapan si:
-        // inicio_existente < fin_nueva  AND  fin_existente > inicio_nueva
-
-        $haySolape = Cita::where('id_doctor', $doctor->id_doctor)
+        $citesExistents = Cita::where('id_doctor', $idDoctor)
             ->where('fecha', $fecha)
-            ->where(function ($q) use ($horaInicio, $horaFin) {
-                $q->where('hora_inicio', '<', $horaFin->format('H:i:s'))
-                  ->where('hora_fin', '>', $horaInicio->format('H:i:s'));
-            })
-            ->exists();
-        $hayHorario = Horario::where('id_doctor', $doctor->id_doctor)
-            ->where('fecha', $fecha)
-            ->where('hora_inicio', '<', $horaInicio->format('H:i:s'))
-            ->where('hora_fin', '>', $horaFin->format('H:i:s'))
-            ->exists();
-        $sePuedeReservar = !$haySolape && $hayHorario;
+            ->whereIn('estado', ['reservada', 'pendiente_pago'])
+            ->orderBy('hora_inicio')
+            ->get(['hora_inicio', 'hora_fin']);
 
-        return $sePuedeReservar;
+        $slot = $inici->copy();
+
+        while ($slot->copy()->addMinutes($duradaMinuts)->lte($fi)) {
+            $fiSlot = $slot->copy()->addMinutes($duradaMinuts);
+
+            $solapa = $citesExistents->contains(function ($c) use ($slot, $fiSlot) {
+                $cInici = Carbon::parse($c->hora_inicio);
+                $cFi = Carbon::parse($c->hora_fin);
+                return $slot->lt($cFi) && $fiSlot->gt($cInici);
+            });
+
+            if (!$solapa) {
+                return $slot;
+            }
+
+            $slot->addMinutes(30);
+        }
+
+        return null;
     }
 }

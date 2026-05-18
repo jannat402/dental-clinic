@@ -20,10 +20,27 @@ class DoctorSeeder extends Seeder
             $tratamientos = Tratamiento::all();
         }
 
-        // Assignar tractaments aleatoris a cada doctor
+        // Tots els doctors tenen "Primera Visita"
+        $primeraVisita = Tratamiento::where('nombre_tratamiento', 'Primera Visita')->first();
+
         foreach ($doctores as $doctor) {
+            if ($primeraVisita) {
+                try {
+                    DB::table('doctor_tratamiento')->insert([
+                        'id_doctor' => $doctor->id_doctor,
+                        'id_tratamiento' => $primeraVisita->id_tratamiento,
+                    ]);
+                } catch (\Exception $e) {
+                    // Already assigned, skip
+                }
+            }
+
+            // Assignar tractaments aleatoris addicionals
             $tractamentsAssignats = $tratamientos->random(min(3, $tratamientos->count()));
             foreach ($tractamentsAssignats as $t) {
+                if ($t->id_tratamiento === ($primeraVisita->id_tratamiento ?? null)) {
+                    continue;
+                }
                 try {
                     DB::table('doctor_tratamiento')->insert([
                         'id_doctor' => $doctor->id_doctor,

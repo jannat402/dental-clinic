@@ -48,7 +48,7 @@
             <input type="hidden" name="fecha" value="{{ $fecha }}">
             <input type="hidden" name="hora_inicio" value="{{ $hora_inicio }}">
             <input type="hidden" name="hora_fin" value="{{ $hora_fin }}">
-            <input type="hidden" name="estado" value="reservada">
+            <input type="hidden" name="estado" value="pendiente_pago">
             <input type="hidden" name="tipo_reserva" value="online">
             @if(isset($clau))
                 <input type="hidden" name="clau" value="{{ $clau }}">

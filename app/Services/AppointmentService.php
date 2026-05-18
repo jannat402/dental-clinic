@@ -10,15 +10,15 @@ use Carbon\Carbon;
 class AppointmentService
 {
     // Validar que la cita se pide con >=24h de antelación
-    public function validarAntelacio(string $fecha): bool
+    public function validarAntelacio(string $fecha, string $horaInicio = '00:00:00'): bool
     {
-        return Carbon::parse($fecha)->gt(Carbon::now()->addHours(24));
+        return Carbon::parse($fecha . ' ' . $horaInicio)->gte(Carbon::now()->addHours(24));
     }
 
     // Validar que se puede modificar/cancelar (>=48h antes)
-    public function validarModificacio(string $fecha): bool
+    public function validarModificacio(string $fecha, string $horaInicio = '00:00:00'): bool
     {
-        return Carbon::parse($fecha)->gt(Carbon::now()->addHours(48));
+        return Carbon::parse($fecha . ' ' . $horaInicio)->gte(Carbon::now()->addHours(48));
     }
 
     // Bloqueo temporal de 10 minutos con cache

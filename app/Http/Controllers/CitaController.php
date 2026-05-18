@@ -39,7 +39,7 @@ class CitaController extends Controller
 
         $appointmentService = app(AppointmentService::class);
 
-        if (!$appointmentService->validarAntelacio($request->fecha)) {
+        if (!$appointmentService->validarAntelacio($request->fecha, $request->hora_inicio)) {
             return back()->withErrors(['fecha' => 'Les cites s\'han de reservar amb almenys 24 hores d\'antelació.']);
         }
 
@@ -111,7 +111,7 @@ class CitaController extends Controller
             'clau' => 'nullable|string'
         ]);
 
-        if (!app(AppointmentService::class)->validarAntelacio($request->fecha)) {
+        if (!app(AppointmentService::class)->validarAntelacio($request->fecha, $request->hora_inicio)) {
             return back()->withErrors(['fecha' => 'Las citas se deben reservar con al menos 24 horas de antelación.']);
         }
 
@@ -140,7 +140,7 @@ class CitaController extends Controller
             abort(403, 'No tienes permiso para modificar esta cita.');
         }
 
-        if (!app(AppointmentService::class)->validarModificacio($cita->fecha)) {
+        if (!app(AppointmentService::class)->validarModificacio($cita->fecha, $cita->hora_inicio)) {
             return back()->withErrors(['error' => 'Solo se pueden modificar citas con 48 horas de antelación.']);
         }
 
@@ -163,7 +163,7 @@ class CitaController extends Controller
             'hora_inicio' => 'required',
         ]);
 
-        if (!app(AppointmentService::class)->validarModificacio($request->fecha)) {
+        if (!app(AppointmentService::class)->validarModificacio($request->fecha, $request->hora_inicio)) {
             return back()->withErrors(['error' => 'Solo se pueden modificar citas con 48 horas de antelación.']);
         }
 
@@ -195,7 +195,7 @@ class CitaController extends Controller
             abort(403, 'No tienes permiso para cancelar esta cita.');
         }
 
-        if (!$esAdmin && !$esDoctor && !app(AppointmentService::class)->validarModificacio($cita->fecha)) {
+        if (!$esAdmin && !$esDoctor && !app(AppointmentService::class)->validarModificacio($cita->fecha, $cita->hora_inicio)) {
             return back()->withErrors(['error' => 'Solo se pueden cancelar citas con 48 horas de antelación.']);
         }
 
@@ -210,9 +210,11 @@ class CitaController extends Controller
     // AJAX: retorna els dies disponibles per a un doctor
     public function obtenerDias($idDoctor)
     {
+        $fechaMinima = now()->addHours(24)->toDateString();
+
         $horarios = Horario::where('id_doctor', $idDoctor)
             ->where('disponible', true)
-            ->where('fecha', '>=', now()->toDateString())
+            ->where('fecha', '>=', $fechaMinima)
             ->orderBy('fecha')
             ->get()
             ->map(function ($h) {
@@ -250,9 +252,14 @@ class CitaController extends Controller
         $fi = \Carbon\Carbon::parse($horario->hora_fin);
         $horarios = [];
 
+        $limite24h = now()->addHours(24);
+
         while ($inici < $fi) {
             $horaStr = $inici->format('H:i:s');
-            $ocupada = $citesOcupades->contains(function ($c) use ($horaStr) {
+            $slotDateTime = \Carbon\Carbon::parse($fecha . ' ' . $horaStr);
+
+            $fuera24h = $slotDateTime->gte($limite24h);
+            $ocupada = !$fuera24h || $citesOcupades->contains(function ($c) use ($horaStr) {
                 return $c->hora_inicio <= $horaStr && $c->hora_fin > $horaStr
                     || $c->hora_inicio === $horaStr;
             });

@@ -55,12 +55,6 @@
                 <span class="icon">&#9644;</span>
                 <span>Pagos</span>
             </a>
-
-            <div class="sidebar-label">Contenido</div>
-            <a href="{{ route('blog.index') }}" class="sidebar-link">
-                <span class="icon">&#9644;</span>
-                <span>Blog</span>
-            </a>
         </nav>
 
         <div class="sidebar-footer">

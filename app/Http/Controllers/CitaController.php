@@ -15,12 +15,18 @@ use Illuminate\Http\Request;
 
 class CitaController extends Controller
 {
+    /**
+     * Muestra todas las citas del cliente con sus relaciones cargadas.
+     */
     public function index()
     {
         $citas = Cita::with(['cliente', 'doctor', 'tratamiento', 'administrativo'])->get();
         return view('vistacliente.panelcitas', compact('citas'));
     }
 
+    /**
+     * Muestra el formulario para solicitar una nueva cita.
+     */
     public function pedir()
     {
         $doctores = Doctor::where('estado', 'activo')->get();
@@ -28,6 +34,9 @@ class CitaController extends Controller
         return view('clinic.seleccionarcita', compact('doctores', 'tratamientos'));
     }
 
+    /**
+     * Confirma la disponibilidad de la cita seleccionada y bloquea temporalmente la franja horaria.
+     */
     public function confirmar(Request $request)
     {
         $request->validate([
@@ -39,13 +48,15 @@ class CitaController extends Controller
 
         $appointmentService = app(AppointmentService::class);
 
+        // Validar la antelación mínima de 24 horas para reservar.
         if (!$appointmentService->validarAntelacio($request->fecha, $request->hora_inicio)) {
-            return back()->withErrors(['fecha' => 'Les cites s\'han de reservar amb almenys 24 hores d\'antelació.']);
+            return back()->withErrors(['fecha' => 'Las citas deben reservarse con al menos 24 horas de antelación.']);
         }
 
         $tractament = Tratamiento::findOrFail($request->id_tratamiento);
         $horaFi = Carbon::parse($request->hora_inicio)->addMinutes($tractament->duracion_minutos)->format('H:i:s');
 
+        // Comprobar si ya existe una cita ocupando exactamente esa franja.
         $ocupada = Cita::where('id_doctor', $request->id_doctor)
             ->where('fecha', $request->fecha)
             ->where('hora_inicio', $request->hora_inicio)
@@ -53,6 +64,7 @@ class CitaController extends Controller
             ->exists();
 
         if ($ocupada) {
+            // Si está ocupada, se buscan alternativas y se muestra el error.
             $alternatives = $appointmentService->obtenirAlternatives(
                 $request->id_doctor,
                 $request->fecha,
@@ -60,12 +72,13 @@ class CitaController extends Controller
                 $tractament->duracion_minutos
             );
             return back()->with([
-                'error' => 'Aquesta franja ja està ocupada.',
+                'error' => 'Esta franja ya está ocupada.',
                 'alternatives' => $alternatives
             ]);
         }
 
         try {
+            // Bloqueo temporal para evitar condiciones de carrera mientras se completa la reserva.
             $clauBloqueig = $appointmentService->bloquejarTemporalment(
                 $request->id_doctor,
                 $request->fecha,
@@ -76,6 +89,7 @@ class CitaController extends Controller
             return back()->withErrors(['hora_inicio' => $e->getMessage()]);
         }
 
+        // Enviar datos a la vista de confirmación de cita seleccionada.
         return view('clinic.citaseleccionada', [
             'clau' => $clauBloqueig,
             'id_doctor' => $request->id_doctor,
@@ -86,6 +100,9 @@ class CitaController extends Controller
         ]);
     }
 
+    /**
+     * Muestra el formulario de creación de cita con los recursos necesarios.
+     */
     public function create()
     {
         return view('vistacliente.create', [
@@ -96,6 +113,9 @@ class CitaController extends Controller
         ]);
     }
 
+    /**
+     * Almacena la cita en la base de datos y redirige al pago.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -117,6 +137,7 @@ class CitaController extends Controller
 
         $cita = Cita::create($request->except('clau'));
 
+        // Si existe un bloqueo temporal, liberarlo tras guardar la cita.
         if (!empty($request->clau)) {
             app(AppointmentService::class)->alliberarBloqueig($request->clau);
         }
@@ -126,12 +147,18 @@ class CitaController extends Controller
         return redirect()->route('payment.page', ['id_cita' => $cita->id_cita]);
     }
 
+    /**
+     * Muestra los detalles de una cita concreta.
+     */
     public function show($id)
     {
         $cita = Cita::with(['cliente', 'doctor', 'tratamiento', 'administrativo'])->findOrFail($id);
         return view('citas.show', compact('cita'));
     }
 
+    /**
+     * Muestra el formulario para editar una cita, aplicando permisos y antelación.
+     */
     public function edit($id_cita)
     {
         $cita = Cita::findOrFail($id_cita);
@@ -152,6 +179,9 @@ class CitaController extends Controller
         ]);
     }
 
+    /**
+     * Actualiza una cita existente y envía notificación de modificación.
+     */
     public function update(Request $request, $id_cita)
     {
         $cita = Cita::findOrFail($id_cita);
@@ -183,6 +213,9 @@ class CitaController extends Controller
         return redirect()->route('mostrar')->with('success', 'Cita actualizada correctamente');
     }
 
+    /**
+     * Marca una cita como cancelada si el usuario tiene permiso y envía notificación.
+     */
     public function destroy($id)
     {
         $cita = Cita::findOrFail($id);
@@ -195,6 +228,7 @@ class CitaController extends Controller
             abort(403, 'No tienes permiso para cancelar esta cita.');
         }
 
+        // Solo clientes pueden cancelar con 48 horas de antelación, admin y doctor no tienen esta restricción aquí.
         if (!$esAdmin && !$esDoctor && !app(AppointmentService::class)->validarModificacio($cita->fecha, $cita->hora_inicio)) {
             return back()->withErrors(['error' => 'Solo se pueden cancelar citas con 48 horas de antelación.']);
         }
@@ -207,7 +241,9 @@ class CitaController extends Controller
         return redirect($ruta)->with('success', 'Cita cancelada correctamente.');
     }
 
-    // AJAX: retorna els dies disponibles per a un doctor
+    /**
+     * Retorna los días disponibles para un doctor a partir de 24 horas de antelación.
+     */
     public function obtenerDias($idDoctor)
     {
         $fechaMinima = now()->addHours(24)->toDateString();
@@ -224,14 +260,19 @@ class CitaController extends Controller
         return response()->json($horarios);
     }
 
-    // AJAX: retorna els tractaments disponibles per a un doctor
+    /**
+     * Retorna tratamientos disponibles asociados a un doctor.
+     */
     public function obtenerTratamientos($idDoctor)
     {
         $doctor = Doctor::with('tratamientos')->findOrFail($idDoctor);
         return response()->json($doctor->tratamientos);
     }
 
-    // AJAX: retorna les hores disponibles per a un doctor en una data
+    /**
+     * Retorna las horas disponibles para un doctor en una fecha concreta,
+     * incluyendo validaciones de franjas ocupadas y de reservas con menos de 24 horas.
+     */
     public function obtenerHoras($idDoctor, $fecha)
     {
         $horario = Horario::where('id_doctor', $idDoctor)

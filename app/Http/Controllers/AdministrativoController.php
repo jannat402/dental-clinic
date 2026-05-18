@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Administrativo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdministrativoController extends Controller
 {
@@ -24,11 +25,14 @@ class AdministrativoController extends Controller
             'nombre' => 'required',
             'apellidos' => 'required',
             'email' => 'required|email|unique:administrativo,email',
+            'contrasenya' => 'required|min:4',
             'autenticacion_segura' => 'required|in:2FA,certificado',
             'rol' => 'required'
         ]);
 
-        Administrativo::create($request->all());
+        $data = $request->all();
+        $data['contrasenya'] = Hash::make($data['contrasenya']);
+        Administrativo::create($data);
 
         return redirect()->route('administrativos.index')->with('success', 'Administrativo creado correctamente');
     }
@@ -57,7 +61,11 @@ class AdministrativoController extends Controller
             'rol' => 'required'
         ]);
 
-        $admin->update($request->all());
+        $data = $request->except('contrasenya');
+        if ($request->filled('contrasenya')) {
+            $data['contrasenya'] = Hash::make($request->contrasenya);
+        }
+        $admin->update($data);
 
         return redirect()->route('administrativos.index')->with('success', 'Administrativo actualizado correctamente');
     }
